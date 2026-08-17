@@ -163,16 +163,6 @@ cd web
 npm run lint
 ```
 
-## Architecture Docs
-
-See the `docs/` folder for detailed plans:
-
-- `docs/plans/2026-08-17-multi-vendor-digital-ecommerce-plan.md` — Master plan
-- `docs/plans/2026-08-17-payment-module-architecture-and-webhooks-plan.md` — Payment architecture
-- `docs/plans/2026-08-17-vendor-auth-and-api-integration.md` — Vendor auth
-- `docs/plans/2026-08-17-storefront-and-buyer-api-integration.md` — Storefront & buyer flows
-- `docs/plans/2026-08-17-admin-portal-api-integration.md` — Admin portal
-
 Domain vocabulary is documented in [`CONCEPTS.md`](CONCEPTS.md).
 
 ## License
