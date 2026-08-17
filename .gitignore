@@ -1,7 +1,5 @@
 .env
 .DS_Store
-dist/
-coverage/
 .idea/
 .vscode/
 /.context
