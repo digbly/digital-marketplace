@@ -28,7 +28,7 @@ class CategoryController extends Controller
     )]
     public function index(): JsonResponse
     {
-        $categories = Category::with('children')
+        $categories = Category::with(['children', 'translations', 'children.translations'])
             ->whereNull('parent_id')
             ->where('is_active', true)
             ->orderBy('sort_order')

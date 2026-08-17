@@ -35,6 +35,10 @@ class VendorResource extends JsonResource
         if ($request->user()) {
             if ($this->resource->pivot && isset($this->resource->pivot->role)) {
                 $currentUserRole = $this->resource->pivot->role;
+            } elseif ($this->relationLoaded('vendorUsers')) {
+                // Use already-loaded vendorUsers to avoid N+1 query
+                $vendorUser = $this->resource->vendorUsers->firstWhere('user_id', $request->user()->id);
+                $currentUserRole = $vendorUser?->role?->value;
             } else {
                 $currentUserRole = $this->resource->getUserRole($request->user())?->value;
             }

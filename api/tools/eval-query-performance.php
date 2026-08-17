@@ -42,8 +42,8 @@ function detectNPlusOne(array $queries): int
     $counts = array_count_values($patterns);
     $nPlusOne = 0;
     foreach ($counts as $pattern => $count) {
-        // A query repeated 3+ times with the same structure is likely N+1
-        if ($count >= 3 && stripos($pattern, 'select') === 0) {
+        // A query repeated 2+ times with the same structure is likely N+1
+        if ($count >= 2 && stripos($pattern, 'select') === 0) {
             $nPlusOne += ($count - 1); // count the excess queries
         }
     }
@@ -111,6 +111,7 @@ function measureEndpoint(
         'query_time_ms' => round($totalQueryTime, 2),
         'wall_time_ms' => $elapsedMs,
         'n_plus_one' => detectNPlusOne($queries),
+        'queries' => array_map(fn($q) => trim(preg_replace('/\s+/', ' ', $q['query'])), $queries),
     ];
 }
 

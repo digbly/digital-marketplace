@@ -37,7 +37,7 @@ class ProductController extends Controller
     )]
     public function index(Request $request): JsonResponse
     {
-        $query = Product::with(['vendor', 'category'])
+        $query = Product::with(['vendor', 'category.translations', 'translations'])
             ->where('status', ProductStatus::PUBLISHED);
 
         if ($request->filled('search')) {
@@ -101,7 +101,7 @@ class ProductController extends Controller
     )]
     public function show(string $slug): JsonResponse
     {
-        $product = Product::with(['vendor', 'category', 'reviews.buyer'])
+        $product = Product::with(['vendor', 'category.translations', 'reviews.buyer', 'translations'])
             ->where('slug', $slug)
             ->where('status', ProductStatus::PUBLISHED)
             ->firstOrFail();

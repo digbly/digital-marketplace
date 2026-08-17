@@ -31,7 +31,7 @@ class AdminProductController extends Controller
     )]
     public function index(Request $request): JsonResponse
     {
-        $products = Product::with(['vendor', 'category'])
+        $products = Product::with(['vendor.vendorUsers', 'category.translations', 'translations'])
             ->latest()
             ->paginate($request->integer('per_page', 20));
 

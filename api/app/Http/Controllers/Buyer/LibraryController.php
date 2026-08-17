@@ -43,7 +43,7 @@ class LibraryController extends Controller
     {
         $userId = Auth::id();
 
-        $items = OrderItem::with(['product.vendor', 'downloads.productFile', 'licenseKey'])
+        $items = OrderItem::with(['product.vendor.vendorUsers', 'product.translations', 'product.category.translations', 'downloads.productFile', 'licenseKey'])
             ->whereHas('order', function ($q) use ($userId) {
                 $q->where('buyer_id', $userId)->where('payment_status', 'paid');
             })

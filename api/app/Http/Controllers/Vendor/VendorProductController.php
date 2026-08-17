@@ -44,7 +44,7 @@ class VendorProductController extends Controller
     )]
     public function index(Request $request, Vendor $vendor): JsonResponse
     {
-        $products = Product::with(['category', 'files'])
+        $products = Product::with(['category.translations', 'files', 'translations'])
             ->where('vendor_id', $vendor->id)
             ->latest()
             ->paginate($request->integer('per_page', 15));
