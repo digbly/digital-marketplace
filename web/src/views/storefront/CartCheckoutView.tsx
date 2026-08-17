@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   ShoppingCart,
   Trash2,
@@ -12,18 +12,29 @@ import {
   Check,
   Zap,
   ShieldCheck,
+  Lock,
+  LogIn,
+  Loader2,
+  AlertCircle,
 } from 'lucide-react';
 import { useMarketplaceStore } from '../../store/marketplaceStore';
+import { useAppSelector } from '../../store/hooks';
+import { useCheckoutMutation } from '../../store/services/storefrontApi';
 import type { Order, OrderItem } from '../../types/marketplace';
 
 export const CartCheckoutView: React.FC = () => {
-  const { cart, removeFromCart, clearCart, getCartTotal, checkoutCart } = useMarketplaceStore();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { cart, removeFromCart, clearCart, getCartTotal } = useMarketplaceStore();
 
-  const [paymentMethod, setPaymentMethod] = useState<'mock' | 'stripe' | 'paypal'>('mock');
+  const [paymentMethod, setPaymentMethod] = useState<string>('stripe');
   const [discountCode, setDiscountCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState<number>(0);
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+
+  const [checkout, { isLoading: isSubmitting }] = useCheckoutMutation();
 
   const subtotal = getCartTotal();
   const discountAmount = appliedDiscount ? (subtotal * appliedDiscount) / 100 : 0;
@@ -38,9 +49,34 @@ export const CartCheckoutView: React.FC = () => {
     }
   };
 
-  const handleProcessCheckout = () => {
-    const order = checkoutCart(paymentMethod);
-    setCompletedOrder(order);
+  const handleProcessCheckout = async () => {
+    if (!isAuthenticated) {
+      navigate('/auth/login?redirect=/checkout');
+      return;
+    }
+
+    if (cart.length === 0) return;
+
+    setCheckoutError(null);
+    try {
+      const response = await checkout({
+        items: cart.map((item) => ({ product_id: item.product.id })),
+        payment_method: paymentMethod,
+        discount_code: discountCode.trim() || undefined,
+      }).unwrap();
+
+      if (response.redirect_url) {
+        window.location.href = response.redirect_url;
+        return;
+      }
+
+      clearCart();
+      setCompletedOrder(response.data);
+    } catch (err: any) {
+      setCheckoutError(
+        err?.data?.message || 'Checkout failed. Please check your payment details and try again.'
+      );
+    }
   };
 
   const handleCopyKey = (key: string) => {
@@ -62,7 +98,7 @@ export const CartCheckoutView: React.FC = () => {
             <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Payment Verified & Settled</span>
             <h1 className="text-3xl font-extrabold text-white mt-1">Thank you for your purchase!</h1>
             <p className="text-sm text-slate-400 mt-2">
-              Order #{completedOrder.order_number} has been processed. Your digital items are now unlocked and ready.
+              Order #{completedOrder.order_number} has been processed. Your digital items are now unlocked in your library.
             </p>
           </div>
 
@@ -75,7 +111,7 @@ export const CartCheckoutView: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <h4 className="font-bold text-white text-base">{item.product_name}</h4>
-                    <span className="text-xs text-slate-400">Sold by {item.vendor?.store_name}</span>
+                    <span className="text-xs text-slate-400">Sold by {item.vendor?.store_name || 'Creator'}</span>
                   </div>
                   <span className="text-sm font-bold text-indigo-400">${item.price.toFixed(2)}</span>
                 </div>
@@ -90,17 +126,15 @@ export const CartCheckoutView: React.FC = () => {
                           {item.downloads[0].file?.original_name || 'Downloadable Package'}
                         </div>
                         <div className="text-[10px] text-slate-400">
-                          {item.downloads[0].max_downloads} downloads remaining
+                          {item.downloads[0].max_downloads ? `${item.downloads[0].max_downloads} downloads remaining` : 'Unlimited downloads'}
                         </div>
                       </div>
                     </div>
 
                     <a
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        alert(`Starting secure stream for: ${item.downloads?.[0].download_token}`);
-                      }}
+                      href={`/api/v1/buyer/download/${item.downloads[0].download_token}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow transition"
                     >
                       Download File
@@ -123,7 +157,7 @@ export const CartCheckoutView: React.FC = () => {
 
                     <button
                       onClick={() => handleCopyKey(item.license_key!.license_key)}
-                      className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1"
+                      className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1 cursor-pointer"
                     >
                       {copiedKey === item.license_key.license_key ? (
                         <Check className="w-3.5 h-3.5 text-emerald-400" />
@@ -185,6 +219,35 @@ export const CartCheckoutView: React.FC = () => {
         <p className="text-xs text-slate-400 mt-1">Review your cart and select payment method</p>
       </div>
 
+      {checkoutError && (
+        <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center gap-3 text-rose-300 text-xs">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          <span>{checkoutError}</span>
+        </div>
+      )}
+
+      {/* Auth Banner if Guest */}
+      {!isAuthenticated && (
+        <div className="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <Lock className="w-5 h-5 text-amber-400 shrink-0" />
+            <div>
+              <h3 className="text-sm font-bold text-white">Sign In Required to Complete Purchase</h3>
+              <p className="text-xs text-amber-200/80">
+                You must sign in so we can attach software license keys and download tokens to your account.
+              </p>
+            </div>
+          </div>
+          <Link
+            to="/auth/login?redirect=/checkout"
+            className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shrink-0 flex items-center justify-center gap-1.5 shadow transition"
+          >
+            <LogIn className="w-3.5 h-3.5" />
+            <span>Sign In to Continue</span>
+          </Link>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left 2 Cols: Cart Items */}
         <div className="lg:col-span-2 space-y-6">
@@ -193,7 +256,7 @@ export const CartCheckoutView: React.FC = () => {
               <h2 className="font-bold text-sm text-white">Items in Cart ({cart.length})</h2>
               <button
                 onClick={clearCart}
-                className="text-xs text-rose-400 hover:underline flex items-center gap-1"
+                className="text-xs text-rose-400 hover:underline flex items-center gap-1 cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Clear Cart</span>
@@ -206,25 +269,33 @@ export const CartCheckoutView: React.FC = () => {
                   key={item.product.id}
                   className="p-4 rounded-2xl bg-slate-800/50 border border-slate-700/60 flex items-center justify-between gap-4"
                 >
-                  <img
-                    src={item.product.thumbnail_url || ''}
-                    alt={item.product.name}
-                    className="w-16 h-16 rounded-xl object-cover bg-slate-700 flex-shrink-0"
-                  />
+                  {item.product.thumbnail_url ? (
+                    <img
+                      src={item.product.thumbnail_url}
+                      alt={item.product.name}
+                      className="w-16 h-16 rounded-xl object-cover bg-slate-700 flex-shrink-0"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-xl bg-slate-700 flex items-center justify-center text-slate-500 flex-shrink-0">
+                      <ShoppingCart className="w-6 h-6" />
+                    </div>
+                  )}
 
                   <div className="flex-1 min-w-0">
                     <h4 className="text-sm font-bold text-white truncate">{item.product.name}</h4>
-                    <p className="text-xs text-slate-400">By {item.product.vendor?.store_name}</p>
+                    <p className="text-xs text-slate-400">By {item.product.vendor?.store_name || 'Creator'}</p>
                     <span className="inline-block mt-1 text-[10px] uppercase font-bold text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">
                       {item.product.product_type}
                     </span>
                   </div>
 
                   <div className="text-right">
-                    <div className="text-base font-bold text-white">${item.product.effective_price.toFixed(2)}</div>
+                    <div className="text-base font-bold text-white">
+                      ${(item.product.effective_price ?? item.product.price ?? 0).toFixed(2)}
+                    </div>
                     <button
                       onClick={() => removeFromCart(item.product.id)}
-                      className="text-xs text-slate-400 hover:text-rose-400 mt-1"
+                      className="text-xs text-slate-400 hover:text-rose-400 mt-1 cursor-pointer"
                     >
                       Remove
                     </button>
@@ -240,14 +311,14 @@ export const CartCheckoutView: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
-                { id: 'mock', label: 'Platform Instant Gateway', desc: 'Instant Simulation for Testing', icon: ShieldCheck },
-                { id: 'stripe', label: 'Stripe Card / Apple Pay', desc: 'Secure Credit & Debit Cards', icon: CreditCard },
-                { id: 'paypal', label: 'PayPal Express', desc: 'PayPal Account & Wallets', icon: Zap },
+                { id: 'stripe', label: 'Credit / Debit Card', desc: 'Powered by Stripe Gateway', icon: CreditCard },
+                { id: 'paypal', label: 'PayPal Express', desc: 'Instant PayPal Wallet', icon: Zap },
+                { id: 'momo', label: 'MoMo E-Wallet', desc: 'QR Code & Direct App Pay', icon: ShieldCheck },
               ].map((pm) => (
                 <button
                   key={pm.id}
-                  onClick={() => setPaymentMethod(pm.id as any)}
-                  className={`p-4 rounded-2xl border text-left flex flex-col justify-between gap-3 transition ${
+                  onClick={() => setPaymentMethod(pm.id)}
+                  className={`p-4 rounded-2xl border text-left flex flex-col justify-between gap-3 transition cursor-pointer ${
                     paymentMethod === pm.id
                       ? 'bg-indigo-600/20 border-indigo-500 text-white font-semibold shadow-md shadow-indigo-600/10'
                       : 'bg-slate-800/60 border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
@@ -287,7 +358,7 @@ export const CartCheckoutView: React.FC = () => {
                 />
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition"
+                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition cursor-pointer"
                 >
                   Apply
                 </button>
@@ -318,13 +389,33 @@ export const CartCheckoutView: React.FC = () => {
               </div>
             </div>
 
-            <button
-              onClick={handleProcessCheckout}
-              className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 flex items-center justify-center gap-2 transition"
-            >
-              <span>Complete Payment (${total.toFixed(2)})</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            {isAuthenticated ? (
+              <button
+                onClick={handleProcessCheckout}
+                disabled={isSubmitting}
+                className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 disabled:opacity-50 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 flex items-center justify-center gap-2 transition cursor-pointer"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Processing Order...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Complete Purchase (${total.toFixed(2)})</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            ) : (
+              <Link
+                to="/auth/login?redirect=/checkout"
+                className="w-full py-3.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 flex items-center justify-center gap-2 transition"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>Sign In to Checkout</span>
+              </Link>
+            )}
 
             <div className="text-center text-[11px] text-slate-500 space-y-1">
               <p>🔒 256-bit Encrypted Transaction</p>

@@ -148,6 +148,8 @@ export const apiSlice = createApi({
     'VendorOrders',
     'VendorWallet',
     'Categories',
+    'StorefrontProducts',
+    'BuyerLibrary',
   ],
   endpoints: () => ({}),
 });

@@ -9,27 +9,70 @@ import {
   ArrowRight,
   MessageSquarePlus,
   X,
+  Layers,
+  Loader2,
+  FileCode2,
 } from 'lucide-react';
 import { useMarketplaceStore } from '../../store/marketplaceStore';
+import { useGetProductBySlugQuery } from '../../store/services/storefrontApi';
+import { useCreateReviewMutation } from '../../store/services/buyerApi';
+import { useAppSelector } from '../../store/hooks';
 
 export const ProductDetailView: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { products, addToCart, addReview } = useMarketplaceStore();
+  const { addToCart } = useMarketplaceStore();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
-  const product = products.find((p) => p.slug === slug) || products[0];
+  const { data: productResponse, isLoading, isError } = useGetProductBySlugQuery(slug || '', {
+    skip: !slug,
+  });
+  const [createReview, { isLoading: isSubmittingReview }] = useCreateReviewMutation();
 
-  const [activeImage, setActiveImage] = useState(product?.preview_images?.[0] || product?.thumbnail_url || '');
+  const product = productResponse?.data;
+
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
+  const [reviewError, setReviewError] = useState<string | null>(null);
 
-  if (!product) {
+  const activeImage = selectedImage || product?.preview_images?.[0] || product?.thumbnail_url || '';
+
+  if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-20 text-center">
-        <h2 className="text-xl font-bold text-white">Product not found</h2>
-        <Link to="/browse" className="mt-4 inline-block text-sm text-indigo-400 hover:underline">
-          Back to marketplace
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8 animate-pulse">
+        <div className="h-4 bg-slate-800 rounded w-1/4" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          <div className="lg:col-span-2 space-y-6">
+            <div className="rounded-3xl bg-slate-800 aspect-video" />
+            <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 space-y-4">
+              <div className="h-6 bg-slate-800 rounded w-1/3" />
+              <div className="h-4 bg-slate-800 rounded w-full" />
+              <div className="h-4 bg-slate-800 rounded w-5/6" />
+            </div>
+          </div>
+          <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-6">
+            <div className="h-8 bg-slate-800 rounded w-3/4" />
+            <div className="h-12 bg-slate-800 rounded w-full" />
+            <div className="h-10 bg-slate-800 rounded w-full" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError || !product) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-20 text-center space-y-4">
+        <h2 className="text-2xl font-bold text-white">Product Not Found</h2>
+        <p className="text-sm text-slate-400">The product you are looking for does not exist or may have been removed.</p>
+        <Link
+          to="/browse"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold"
+        >
+          <span>Return to Marketplace</span>
+          <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
     );
@@ -40,12 +83,25 @@ export const ProductDetailView: React.FC = () => {
     navigate('/checkout');
   };
 
-  const handleReviewSubmit = (e: React.FormEvent) => {
+  const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (reviewComment.trim()) {
-      addReview(product.id, reviewRating, reviewComment.trim());
+    if (!isAuthenticated) {
+      navigate(`/auth/login?redirect=/products/${slug}`);
+      return;
+    }
+    if (!reviewComment.trim()) return;
+
+    setReviewError(null);
+    try {
+      await createReview({
+        product_id: product.id,
+        rating: reviewRating,
+        comment: reviewComment.trim(),
+      }).unwrap();
       setIsReviewModalOpen(false);
       setReviewComment('');
+    } catch (err: any) {
+      setReviewError(err?.data?.message || 'Could not submit review. Please ensure you have purchased this product.');
     }
   };
 
@@ -66,11 +122,17 @@ export const ProductDetailView: React.FC = () => {
           {/* Main Visual Showcase */}
           <div className="space-y-4">
             <div className="rounded-3xl overflow-hidden bg-slate-900 border border-slate-800 aspect-video relative">
-              <img
-                src={activeImage || product.thumbnail_url || ''}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
+              {activeImage ? (
+                <img
+                  src={activeImage}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-slate-800 text-slate-600">
+                  <Layers className="w-16 h-16" />
+                </div>
+              )}
               <div className="absolute top-4 left-4 flex gap-2">
                 <span className="px-3 py-1 rounded-lg text-xs font-bold uppercase bg-slate-900/90 backdrop-blur text-indigo-300 border border-indigo-500/30">
                   {product.product_type === 'downloadable_file'
@@ -93,8 +155,8 @@ export const ProductDetailView: React.FC = () => {
                 {product.preview_images.map((img, idx) => (
                   <button
                     key={idx}
-                    onClick={() => setActiveImage(img)}
-                    className={`w-24 h-16 rounded-xl overflow-hidden border-2 transition flex-shrink-0 ${
+                    onClick={() => setSelectedImage(img)}
+                    className={`w-24 h-16 rounded-xl overflow-hidden border-2 transition flex-shrink-0 cursor-pointer ${
                       activeImage === img ? 'border-indigo-500 shadow-md shadow-indigo-500/20' : 'border-slate-800 opacity-60 hover:opacity-100'
                     }`}
                   >
@@ -109,8 +171,30 @@ export const ProductDetailView: React.FC = () => {
           <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/60 border border-slate-800 space-y-6">
             <h2 className="text-xl font-bold text-white">Asset Overview & Documentation</h2>
             <div className="text-slate-300 text-sm leading-relaxed whitespace-pre-line space-y-4">
-              {product.description || product.short_description}
+              {product.description || product.short_description || 'No description provided.'}
             </div>
+
+            {/* Files Attached List */}
+            {product.files && product.files.length > 0 && (
+              <div className="pt-6 border-t border-slate-800 space-y-3">
+                <h3 className="text-sm font-bold uppercase text-slate-400 tracking-wider">Included Files ({product.files.length})</h3>
+                <div className="space-y-2">
+                  {product.files.map((file) => (
+                    <div key={file.id} className="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-center justify-between">
+                      <div className="flex items-center gap-2.5">
+                        <FileCode2 className="w-4 h-4 text-indigo-400" />
+                        <div>
+                          <span className="text-xs font-semibold text-white block">{file.original_name || file.file_name}</span>
+                          <span className="text-[10px] text-slate-400">
+                            Version {file.version} • {(file.file_size / (1024 * 1024)).toFixed(2)} MB
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Technical Specifications Matrix */}
             {product.attributes && Object.keys(product.attributes).length > 0 && (
@@ -139,14 +223,20 @@ export const ProductDetailView: React.FC = () => {
                       <Star key={s} className="w-4 h-4 fill-amber-400" />
                     ))}
                   </div>
-                  <span className="text-sm font-bold text-white">{product.rating_avg.toFixed(1)} out of 5</span>
-                  <span className="text-xs text-slate-400">({product.rating_count} reviews)</span>
+                  <span className="text-sm font-bold text-white">{(product.rating_avg || 0).toFixed(1)} out of 5</span>
+                  <span className="text-xs text-slate-400">({product.rating_count || 0} reviews)</span>
                 </div>
               </div>
 
               <button
-                onClick={() => setIsReviewModalOpen(true)}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition"
+                onClick={() => {
+                  if (!isAuthenticated) {
+                    navigate(`/auth/login?redirect=/products/${slug}`);
+                  } else {
+                    setIsReviewModalOpen(true);
+                  }
+                }}
+                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
               >
                 <MessageSquarePlus className="w-4 h-4 text-indigo-400" />
                 <span>Write Review</span>
@@ -187,7 +277,7 @@ export const ProductDetailView: React.FC = () => {
           <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-6 sticky top-24">
             <div>
               <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
-                <span>Total Sales: {product.total_sales}</span>
+                <span>Total Sales: {product.total_sales || 0}</span>
                 <span className="text-emerald-400 font-medium">In Stock / Instant Delivery</span>
               </div>
               <h1 className="text-2xl font-extrabold text-white">{product.name}</h1>
@@ -198,7 +288,9 @@ export const ProductDetailView: React.FC = () => {
             <div className="p-4 rounded-2xl bg-slate-800/70 border border-slate-700/60 flex items-baseline justify-between">
               <div>
                 <span className="text-xs text-slate-400 block">Single Commercial License</span>
-                <span className="text-3xl font-extrabold text-white">${product.effective_price.toFixed(2)}</span>
+                <span className="text-3xl font-extrabold text-white">
+                  ${(product.effective_price ?? product.price ?? 0).toFixed(2)}
+                </span>
                 {product.sale_price && (
                   <span className="text-xs text-slate-400 line-through ml-2">${product.price.toFixed(2)}</span>
                 )}
@@ -214,7 +306,7 @@ export const ProductDetailView: React.FC = () => {
             <div className="space-y-2.5">
               <button
                 onClick={handleBuyNow}
-                className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 flex items-center justify-center gap-2 transition"
+                className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 flex items-center justify-center gap-2 transition cursor-pointer"
               >
                 <span>Buy Now with Instant Access</span>
                 <ArrowRight className="w-4 h-4" />
@@ -222,7 +314,7 @@ export const ProductDetailView: React.FC = () => {
 
               <button
                 onClick={() => addToCart(product)}
-                className="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm border border-slate-700 transition"
+                className="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm border border-slate-700 transition cursor-pointer"
               >
                 Add to Cart
               </button>
@@ -259,16 +351,22 @@ export const ProductDetailView: React.FC = () => {
 
           {/* Creator Profile Box */}
           {product.vendor && (
-            <div className="p-5 rounded-3xl bg-slate-900 border border-slate-800 flex items-center gap-4">
-              <img
-                src={product.vendor.logo_url || ''}
-                alt={product.vendor.store_name}
-                className="w-12 h-12 rounded-2xl object-cover border border-purple-500/30"
-              />
+            <div className="p-5 rounded-3xl bg-slate-900 border border-slate-800 flex items-start gap-4">
+              {product.vendor.logo_url ? (
+                <img
+                  src={product.vendor.logo_url}
+                  alt={product.vendor.store_name}
+                  className="w-12 h-12 rounded-2xl object-cover border border-purple-500/30"
+                />
+              ) : (
+                <div className="w-12 h-12 rounded-2xl bg-purple-900/40 border border-purple-500/30 flex items-center justify-center text-purple-300 font-bold text-sm">
+                  {product.vendor.store_name?.[0] || 'V'}
+                </div>
+              )}
               <div className="flex-1 min-w-0">
                 <div className="text-[11px] text-purple-400 uppercase font-bold tracking-wider">Creator Store</div>
                 <h4 className="text-sm font-bold text-white truncate">{product.vendor.store_name}</h4>
-                <p className="text-xs text-slate-400 truncate">{product.vendor.bio}</p>
+                <p className="text-xs text-slate-400 line-clamp-2 mt-0.5">{product.vendor.bio || 'Verified creator'}</p>
               </div>
             </div>
           )}
@@ -281,10 +379,16 @@ export const ProductDetailView: React.FC = () => {
           <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-5">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold text-white">Review {product.name}</h3>
-              <button onClick={() => setIsReviewModalOpen(false)} className="text-slate-400 hover:text-white">
+              <button onClick={() => setIsReviewModalOpen(false)} className="text-slate-400 hover:text-white cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
+
+            {reviewError && (
+              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs">
+                {reviewError}
+              </div>
+            )}
 
             <form onSubmit={handleReviewSubmit} className="space-y-4">
               <div>
@@ -295,7 +399,7 @@ export const ProductDetailView: React.FC = () => {
                       type="button"
                       key={star}
                       onClick={() => setReviewRating(star)}
-                      className="p-1.5 rounded-lg hover:bg-slate-800"
+                      className="p-1.5 rounded-lg hover:bg-slate-800 cursor-pointer"
                     >
                       <Star
                         className={`w-6 h-6 ${
@@ -323,15 +427,17 @@ export const ProductDetailView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsReviewModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300"
+                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white shadow"
+                  disabled={isSubmittingReview}
+                  className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-xs font-semibold text-white shadow flex items-center gap-1.5 cursor-pointer"
                 >
-                  Submit Review
+                  {isSubmittingReview && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                  <span>Submit Review</span>
                 </button>
               </div>
             </form>

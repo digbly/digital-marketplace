@@ -20,12 +20,15 @@ import {
 import { useMarketplaceStore } from '../../store/marketplaceStore';
 import { useAppSelector } from '../../store/hooks';
 import { useLogoutMutation } from '../../store/services/authApi';
+import { useGetCategoriesQuery } from '../../store/services/storefrontApi';
 import type { UserRole } from '../../types/marketplace';
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user: authUser } = useAppSelector((state) => state.auth);
   const [logout] = useLogoutMutation();
+  const { data: categoriesData } = useGetCategoriesQuery();
+  const categories = categoriesData?.data || [];
 
   const {
     activeRole,
@@ -33,7 +36,6 @@ export const Navbar: React.FC = () => {
     cart,
     removeFromCart,
     getCartTotal,
-    categories,
     searchQuery,
     setSearchQuery,
     setSelectedCategory,
