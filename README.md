@@ -79,8 +79,19 @@ php artisan key:generate
 php artisan migrate
 php artisan db:seed
 
-# Passport keys
+# Passport keys & password grant client
 php artisan passport:install
+
+# Create password grant client (used for API login via HasPassportPasswordGrant trait)
+php artisan passport:client --password --name="Client-Web"
+
+# After creating, add the client ID and secret to .env:
+#   PASSPORT_PASSWORD_CLIENT_ID=<password client ID>
+#   PASSPORT_PASSWORD_CLIENT_SECRET=<password client secret>
+#
+# These are read by config/auth.php → auth.providers.users.passport
+# and used by AppServiceProvider::boot() which enables the password grant,
+# sets token lifetimes (15 days access, 30 days refresh, 6 months personal).
 
 # Storage symlink
 php artisan storage:link
