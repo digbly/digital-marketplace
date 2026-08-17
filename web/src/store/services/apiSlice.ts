@@ -150,6 +150,10 @@ export const apiSlice = createApi({
     'Categories',
     'StorefrontProducts',
     'BuyerLibrary',
+    'AdminAnalytics',
+    'AdminVendors',
+    'AdminProducts',
+    'AdminPayouts',
   ],
   endpoints: () => ({}),
 });

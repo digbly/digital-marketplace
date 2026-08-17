@@ -11,7 +11,11 @@ import {
   ArrowUpRight,
 } from 'lucide-react';
 
+import { useAppSelector } from '../../store/hooks';
+
 export const AdminPortalLayout: React.FC = () => {
+  const { user } = useAppSelector((state) => state.auth);
+
   const navItems = [
     { label: 'Platform Analytics', to: '/admin', icon: BarChart3, end: true },
     { label: 'Vendor Approvals', to: '/admin/vendors', icon: Users },
@@ -35,7 +39,7 @@ export const AdminPortalLayout: React.FC = () => {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="text-xs text-amber-300 font-semibold uppercase tracking-wider">Control Plane</div>
-                <div className="text-sm font-bold text-white truncate">Super Admin</div>
+                <div className="text-sm font-bold text-white truncate">{user?.name || 'Super Admin'}</div>
               </div>
             </div>
 

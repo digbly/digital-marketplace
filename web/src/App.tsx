@@ -89,7 +89,14 @@ export function App() {
           </Route>
 
           {/* Super Admin Portal Routes */}
-          <Route path="/admin" element={<AdminPortalLayout />}>
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminPortalLayout />
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<AdminDashboardView />} />
             <Route path="vendors" element={<AdminVendorsView />} />
             <Route path="products" element={<AdminProductsView />} />
