@@ -44,7 +44,7 @@ class OrderService
                 $price = $product->effective_price;
                 $subtotal += $price;
 
-                $commissionRate = $product->vendor->commission_rate ?? 15.00;
+                $commissionRate = $product->vendor->commission_rate ?? config('marketplace.default_commission_rate', 15.00);
                 $commissionAmount = round(($price * $commissionRate) / 100, 2);
                 $vendorEarning = round($price - $commissionAmount, 2);
 
