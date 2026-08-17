@@ -1047,13 +1047,397 @@
                 }
             }
         },
-        "/api/vendor/orders": {
+        "/api/vendors": {
+            "get": {
+                "tags": [
+                    "Vendor - Management"
+                ],
+                "summary": "List all vendors the authenticated user belongs to",
+                "operationId": "d04468b4c3cf5ac0b80fe217524b3e33",
+                "responses": {
+                    "200": {
+                        "description": "List of user vendors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/App\\Http\\Resources\\VendorResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Vendor - Management"
+                ],
+                "summary": "Create a new vendor store",
+                "operationId": "3ccb1ab7a8ecd673b7e8d7a6b6a4f03b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Vendor\\CreateVendorRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Vendor created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\VendorResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/vendors/{vendor}": {
+            "get": {
+                "tags": [
+                    "Vendor - Management"
+                ],
+                "summary": "Get vendor store profile",
+                "operationId": "f4d40940cc1a25e16af7202feca164ba",
+                "parameters": [
+                    {
+                        "name": "vendor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Vendor details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\VendorResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Vendor - Management"
+                ],
+                "summary": "Update vendor store profile",
+                "operationId": "92358f01f12a13e328d1b7c788b4f4cc",
+                "parameters": [
+                    {
+                        "name": "vendor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Vendor\\StoreVendorProfileRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Vendor updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\VendorResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/vendors/{vendor}/members": {
+            "get": {
+                "tags": [
+                    "Vendor - Members"
+                ],
+                "summary": "List all members of the vendor store",
+                "operationId": "c837a2ccd37b0e2400c8a67823b3ba08",
+                "parameters": [
+                    {
+                        "name": "vendor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of vendor members",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/App\\Http\\Resources\\VendorUserResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Vendor - Members"
+                ],
+                "summary": "Add a new member to the vendor store",
+                "operationId": "9f05d8ec68aa273d130a677275b79729",
+                "parameters": [
+                    {
+                        "name": "vendor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Vendor\\StoreVendorUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Member added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\VendorUserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/vendors/{vendor}/members/{user}": {
+            "put": {
+                "tags": [
+                    "Vendor - Members"
+                ],
+                "summary": "Update a member's role in the vendor store",
+                "operationId": "19d967c86653bca912956651c8a466c7",
+                "parameters": [
+                    {
+                        "name": "vendor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Vendor\\UpdateVendorUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Member role updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\VendorUserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Vendor - Members"
+                ],
+                "summary": "Remove a member from the vendor store",
+                "operationId": "49fe1fd03b5610fddcabb5d31cf51a00",
+                "parameters": [
+                    {
+                        "name": "vendor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Member removed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/vendors/{vendor}/orders": {
             "get": {
                 "tags": [
                     "Vendor - Orders"
                 ],
                 "summary": "List all sold items and customer orders for the vendor",
-                "operationId": "9bd21a24e9c99863dfdb6741d8794752",
+                "operationId": "97b963ae865a398a4b4727cf94ee37ad",
+                "parameters": [
+                    {
+                        "name": "vendor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "List of order items",
@@ -1081,13 +1465,23 @@
                 ]
             }
         },
-        "/api/vendor/products": {
+        "/api/vendors/{vendor}/products": {
             "get": {
                 "tags": [
                     "Vendor - Products"
                 ],
-                "summary": "List all products belonging to the authenticated vendor",
-                "operationId": "e1419702270640672dc2d929cc77d94d",
+                "summary": "List all products belonging to the specified vendor",
+                "operationId": "122a6d3afd0efe49b0d5333ec27fa069",
+                "parameters": [
+                    {
+                        "name": "vendor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "List of vendor products",
@@ -1119,7 +1513,17 @@
                     "Vendor - Products"
                 ],
                 "summary": "Create a new product by vendor",
-                "operationId": "663935d5aa95fb4173e9ad8013416a87",
+                "operationId": "709529ad0827ecdc2599c9d6759ca241",
+                "parameters": [
+                    {
+                        "name": "vendor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1154,14 +1558,22 @@
                 ]
             }
         },
-        "/api/vendor/products/{id}": {
+        "/api/vendors/{vendor}/products/{id}": {
             "put": {
                 "tags": [
                     "Vendor - Products"
                 ],
                 "summary": "Update existing product",
-                "operationId": "55ae39728be974d210b43bb73318e104",
+                "operationId": "0fb65348a0bab3eed91e2cd3950070bb",
                 "parameters": [
+                    {
+                        "name": "vendor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     {
                         "name": "id",
                         "in": "path",
@@ -1210,8 +1622,16 @@
                     "Vendor - Products"
                 ],
                 "summary": "Delete product",
-                "operationId": "7c4be0e88ad8bafdd726fd8e4edcc98b",
+                "operationId": "d6c914e5925f34697c37c37e5b79f041",
                 "parameters": [
+                    {
+                        "name": "vendor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     {
                         "name": "id",
                         "in": "path",
@@ -1234,14 +1654,22 @@
                 ]
             }
         },
-        "/api/vendor/products/{id}/files": {
+        "/api/vendors/{vendor}/products/{id}/files": {
             "post": {
                 "tags": [
                     "Vendor - Products"
                 ],
                 "summary": "Upload digital file for product",
-                "operationId": "5737fab5d7ef940236e56ab4d6d43130",
+                "operationId": "70a99cd8539cb5fa6c2c69cb7667929e",
                 "parameters": [
+                    {
+                        "name": "vendor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     {
                         "name": "id",
                         "in": "path",
@@ -1286,14 +1714,22 @@
                 ]
             }
         },
-        "/api/vendor/products/{id}/license-keys": {
+        "/api/vendors/{vendor}/products/{id}/license-keys": {
             "post": {
                 "tags": [
                     "Vendor - Products"
                 ],
                 "summary": "Import license keys into product pool",
-                "operationId": "f312fb4c2e66dd64bbbd2d25c606d5f0",
+                "operationId": "32ad0ddb9b862d50e1b43cbdc5412f32",
                 "parameters": [
+                    {
+                        "name": "vendor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     {
                         "name": "id",
                         "in": "path",
@@ -1396,13 +1832,23 @@
                 ]
             }
         },
-        "/api/vendor/wallet": {
+        "/api/vendors/{vendor}/wallet": {
             "get": {
                 "tags": [
                     "Vendor - Wallet"
                 ],
                 "summary": "Get vendor wallet overview and recent transactions",
-                "operationId": "18f749cb5a002c7c806796ae17a7d4f7",
+                "operationId": "b61122f24e68e16feb0c68e4d6034233",
+                "parameters": [
+                    {
+                        "name": "vendor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Vendor wallet details",
@@ -1427,13 +1873,23 @@
                 ]
             }
         },
-        "/api/vendor/payouts": {
+        "/api/vendors/{vendor}/payouts": {
             "post": {
                 "tags": [
                     "Vendor - Wallet"
                 ],
                 "summary": "Submit payout withdrawal request",
-                "operationId": "40194103640e592de5b9ef187af773d1",
+                "operationId": "fb56128e68a46aa843ebe37c73c1e972",
+                "parameters": [
+                    {
+                        "name": "vendor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1752,6 +2208,39 @@
                 },
                 "type": "object"
             },
+            "App\\Http\\Requests\\Vendor\\CreateVendorRequest": {
+                "required": [
+                    "store_name"
+                ],
+                "properties": {
+                    "store_name": {
+                        "type": "string",
+                        "example": "CodeCraft Studios"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "codecraft-studios",
+                        "nullable": true
+                    },
+                    "bio": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "logo_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "banner_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "payout_details": {
+                        "type": "object",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
             "App\\Http\\Requests\\Vendor\\ImportLicenseKeysRequest": {
                 "required": [
                     "license_keys"
@@ -1879,6 +2368,34 @@
                 },
                 "type": "object"
             },
+            "App\\Http\\Requests\\Vendor\\StoreVendorUserRequest": {
+                "required": [
+                    "email",
+                    "role"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "developer@example.com"
+                    },
+                    "user_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "role": {
+                        "type": "string",
+                        "example": "staff",
+                        "enum": [
+                            "owner",
+                            "manager",
+                            "staff"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
             "App\\Http\\Requests\\Vendor\\UpdateProductRequest": {
                 "properties": {
                     "category_id": {
@@ -1950,6 +2467,23 @@
                     "attributes": {
                         "type": "object",
                         "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Vendor\\UpdateVendorUserRequest": {
+                "required": [
+                    "role"
+                ],
+                "properties": {
+                    "role": {
+                        "type": "string",
+                        "example": "manager",
+                        "enum": [
+                            "owner",
+                            "manager",
+                            "staff"
+                        ]
                     }
                 },
                 "type": "object"
@@ -2591,7 +3125,6 @@
             "App\\Http\\Resources\\VendorResource": {
                 "required": [
                     "id",
-                    "user_id",
                     "store_name",
                     "slug",
                     "status",
@@ -2599,10 +3132,6 @@
                 ],
                 "properties": {
                     "id": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "user_id": {
                         "type": "string",
                         "format": "uuid"
                     },
@@ -2635,6 +3164,11 @@
                         "type": "string",
                         "example": "approved"
                     },
+                    "current_user_role": {
+                        "type": "string",
+                        "example": "owner",
+                        "nullable": true
+                    },
                     "created_at": {
                         "type": "string",
                         "format": "date-time"
@@ -2642,6 +3176,45 @@
                     "updated_at": {
                         "type": "string",
                         "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\VendorUserResource": {
+                "required": [
+                    "id",
+                    "vendor_id",
+                    "user_id",
+                    "role",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "vendor_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "user_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "role": {
+                        "type": "string",
+                        "example": "manager"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/App\\Http\\Resources\\UserResource"
                     }
                 },
                 "type": "object"
@@ -2781,6 +3354,14 @@
         {
             "name": "Storefront - Products",
             "description": "Storefront - Products"
+        },
+        {
+            "name": "Vendor - Management",
+            "description": "Vendor - Management"
+        },
+        {
+            "name": "Vendor - Members",
+            "description": "Vendor - Members"
         },
         {
             "name": "Vendor - Orders",

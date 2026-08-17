@@ -101,7 +101,7 @@ class ProductController extends Controller
     )]
     public function show(string $slug): JsonResponse
     {
-        $product = Product::with(['vendor.user', 'category', 'reviews.buyer'])
+        $product = Product::with(['vendor', 'category', 'reviews.buyer'])
             ->where('slug', $slug)
             ->where('status', ProductStatus::PUBLISHED)
             ->firstOrFail();

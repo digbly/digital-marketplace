@@ -17,30 +17,19 @@ use App\Models\ProductLicenseKey;
 use App\Models\Vendor;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
 class VendorProductController extends Controller
 {
-    protected function getVendor(): Vendor
-    {
-        return Vendor::firstOrCreate(
-            ['user_id' => Auth::id()],
-            [
-                'store_name' => Auth::user()->name . "'s Store",
-                'slug' => Str::slug(Auth::user()->name . '-' . Str::random(5)),
-                'status' => 'approved',
-            ]
-        );
-    }
-
     #[OA\Get(
-        path: "/api/vendor/products",
-        summary: "List all products belonging to the authenticated vendor",
+        path: "/api/vendors/{vendor}/products",
+        summary: "List all products belonging to the specified vendor",
         security: [["passport" => []]],
         tags: ["Vendor - Products"],
+        parameters: [
+            new OA\Parameter(name: "vendor", in: "path", required: true, schema: new OA\Schema(type: "string")),
+        ],
         responses: [
             new OA\Response(
                 response: 200,
@@ -53,10 +42,8 @@ class VendorProductController extends Controller
             ),
         ]
     )]
-    public function index(Request $request): JsonResponse
+    public function index(Request $request, Vendor $vendor): JsonResponse
     {
-        $vendor = $this->getVendor();
-
         $products = Product::with(['category', 'files'])
             ->where('vendor_id', $vendor->id)
             ->latest()
@@ -73,10 +60,13 @@ class VendorProductController extends Controller
     }
 
     #[OA\Post(
-        path: "/api/vendor/products",
+        path: "/api/vendors/{vendor}/products",
         summary: "Create a new product by vendor",
         security: [["passport" => []]],
         tags: ["Vendor - Products"],
+        parameters: [
+            new OA\Parameter(name: "vendor", in: "path", required: true, schema: new OA\Schema(type: "string")),
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: [
@@ -100,31 +90,46 @@ class VendorProductController extends Controller
             ),
         ]
     )]
-    public function store(StoreProductRequest $request): JsonResponse
+    public function store(StoreProductRequest $request, Vendor $vendor): JsonResponse
     {
-        $vendor = $this->getVendor();
         $validated = $request->validated();
+        $slug = Str::slug($validated['name'] . '-' . Str::random(5));
 
-        $slug = Str::slug($validated['name']) . '-' . Str::random(5);
-
-        $product = Product::create(array_merge($validated, [
+        $product = Product::create([
             'vendor_id' => $vendor->id,
+            'category_id' => $validated['category_id'],
             'slug' => $slug,
-            'status' => ProductStatus::PUBLISHED, // Direct publish or pending
-        ]));
+            'price' => $validated['price'],
+            'sale_price' => $validated['sale_price'] ?? null,
+            'product_type' => $validated['product_type'],
+            'status' => ProductStatus::PENDING,
+            'thumbnail_url' => $validated['thumbnail_url'] ?? null,
+            'preview_images' => $validated['preview_images'] ?? [],
+            'demo_url' => $validated['demo_url'] ?? null,
+            'version' => $validated['version'] ?? '1.0.0',
+            'download_limit' => $validated['download_limit'] ?? null,
+            'expiry_days' => $validated['expiry_days'] ?? null,
+            'attributes' => $validated['attributes'] ?? null,
+        ]);
+
+        $product->translateOrNew('en')->name = $validated['name'];
+        $product->translateOrNew('en')->short_description = $validated['short_description'] ?? null;
+        $product->translateOrNew('en')->description = $validated['description'] ?? null;
+        $product->save();
 
         return response()->json([
-            'message' => 'Product created successfully',
-            'data' => new ProductResource($product),
+            'message' => 'Product created and submitted for review',
+            'data' => new ProductResource($product->load(['category', 'files'])),
         ], 201);
     }
 
     #[OA\Put(
-        path: "/api/vendor/products/{id}",
+        path: "/api/vendors/{vendor}/products/{id}",
         summary: "Update existing product",
         security: [["passport" => []]],
         tags: ["Vendor - Products"],
         parameters: [
+            new OA\Parameter(name: "vendor", in: "path", required: true, schema: new OA\Schema(type: "string")),
             new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "string", format: "uuid")),
         ],
         requestBody: new OA\RequestBody(
@@ -150,9 +155,8 @@ class VendorProductController extends Controller
             ),
         ]
     )]
-    public function update(UpdateProductRequest $request, string $id): JsonResponse
+    public function update(UpdateProductRequest $request, Vendor $vendor, string $id): JsonResponse
     {
-        $vendor = $this->getVendor();
         $product = Product::where('vendor_id', $vendor->id)->findOrFail($id);
 
         $product->update($request->validated());
@@ -164,20 +168,20 @@ class VendorProductController extends Controller
     }
 
     #[OA\Delete(
-        path: "/api/vendor/products/{id}",
+        path: "/api/vendors/{vendor}/products/{id}",
         summary: "Delete product",
         security: [["passport" => []]],
         tags: ["Vendor - Products"],
         parameters: [
+            new OA\Parameter(name: "vendor", in: "path", required: true, schema: new OA\Schema(type: "string")),
             new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "string", format: "uuid")),
         ],
         responses: [
             new OA\Response(response: 200, description: "Product deleted successfully"),
         ]
     )]
-    public function destroy(string $id): JsonResponse
+    public function destroy(Vendor $vendor, string $id): JsonResponse
     {
-        $vendor = $this->getVendor();
         $product = Product::where('vendor_id', $vendor->id)->findOrFail($id);
         $product->delete();
 
@@ -187,11 +191,12 @@ class VendorProductController extends Controller
     }
 
     #[OA\Post(
-        path: "/api/vendor/products/{id}/files",
+        path: "/api/vendors/{vendor}/products/{id}/files",
         summary: "Upload digital file for product",
         security: [["passport" => []]],
         tags: ["Vendor - Products"],
         parameters: [
+            new OA\Parameter(name: "vendor", in: "path", required: true, schema: new OA\Schema(type: "string")),
             new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "string", format: "uuid")),
         ],
         requestBody: new OA\RequestBody(
@@ -217,9 +222,8 @@ class VendorProductController extends Controller
             ),
         ]
     )]
-    public function uploadFile(UploadProductFileRequest $request, string $id): JsonResponse
+    public function uploadFile(UploadProductFileRequest $request, Vendor $vendor, string $id): JsonResponse
     {
-        $vendor = $this->getVendor();
         $product = Product::where('vendor_id', $vendor->id)->findOrFail($id);
 
         $uploadedFile = $request->file('file');
@@ -244,11 +248,12 @@ class VendorProductController extends Controller
     }
 
     #[OA\Post(
-        path: "/api/vendor/products/{id}/license-keys",
+        path: "/api/vendors/{vendor}/products/{id}/license-keys",
         summary: "Import license keys into product pool",
         security: [["passport" => []]],
         tags: ["Vendor - Products"],
         parameters: [
+            new OA\Parameter(name: "vendor", in: "path", required: true, schema: new OA\Schema(type: "string")),
             new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "string", format: "uuid")),
         ],
         requestBody: new OA\RequestBody(
@@ -266,9 +271,8 @@ class VendorProductController extends Controller
             new OA\Response(response: 200, description: "License keys imported successfully"),
         ]
     )]
-    public function importLicenseKeys(ImportLicenseKeysRequest $request, string $id): JsonResponse
+    public function importLicenseKeys(ImportLicenseKeysRequest $request, Vendor $vendor, string $id): JsonResponse
     {
-        $vendor = $this->getVendor();
         $product = Product::where('vendor_id', $vendor->id)->findOrFail($id);
 
         $keys = $request->validated('license_keys');

@@ -10,8 +10,6 @@ use App\Models\Vendor;
 use App\Models\VendorWallet;
 use App\Services\PayoutService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
 class VendorWalletController extends Controller
@@ -20,23 +18,14 @@ class VendorWalletController extends Controller
         protected PayoutService $payoutService
     ) {}
 
-    protected function getVendor(): Vendor
-    {
-        return Vendor::firstOrCreate(
-            ['user_id' => Auth::id()],
-            [
-                'store_name' => Auth::user()->name . "'s Store",
-                'slug' => Str::slug(Auth::user()->name . '-' . Str::random(5)),
-                'status' => 'approved',
-            ]
-        );
-    }
-
     #[OA\Get(
-        path: "/api/vendor/wallet",
+        path: "/api/vendors/{vendor}/wallet",
         summary: "Get vendor wallet overview and recent transactions",
         security: [["passport" => []]],
         tags: ["Vendor - Wallet"],
+        parameters: [
+            new OA\Parameter(name: "vendor", in: "path", required: true, schema: new OA\Schema(type: "string")),
+        ],
         responses: [
             new OA\Response(
                 response: 200,
@@ -49,9 +38,8 @@ class VendorWalletController extends Controller
             ),
         ]
     )]
-    public function index(): JsonResponse
+    public function index(Vendor $vendor): JsonResponse
     {
-        $vendor = $this->getVendor();
         $wallet = VendorWallet::with(['transactions' => function ($q) {
             $q->latest()->limit(50);
         }])->firstOrCreate(['vendor_id' => $vendor->id]);
@@ -62,10 +50,13 @@ class VendorWalletController extends Controller
     }
 
     #[OA\Post(
-        path: "/api/vendor/payouts",
+        path: "/api/vendors/{vendor}/payouts",
         summary: "Submit payout withdrawal request",
         security: [["passport" => []]],
         tags: ["Vendor - Wallet"],
+        parameters: [
+            new OA\Parameter(name: "vendor", in: "path", required: true, schema: new OA\Schema(type: "string")),
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: [
@@ -90,10 +81,8 @@ class VendorWalletController extends Controller
             ),
         ]
     )]
-    public function requestPayout(CreatePayoutRequest $request): JsonResponse
+    public function requestPayout(CreatePayoutRequest $request, Vendor $vendor): JsonResponse
     {
-        $vendor = $this->getVendor();
-
         $payout = $this->payoutService->requestPayout(
             $vendor,
             $request->validated('amount'),

@@ -8,6 +8,7 @@ use App\Enums\ProductStatus;
 use App\Enums\ProductType;
 use App\Enums\UserRole;
 use App\Enums\VendorStatus;
+use App\Enums\VendorUserRole;
 use App\Enums\WalletTransactionType;
 use App\Models\Category;
 use App\Models\Order;
@@ -19,6 +20,7 @@ use App\Models\ProductLicenseKey;
 use App\Models\Review;
 use App\Models\User;
 use App\Models\Vendor;
+use App\Models\VendorUser;
 use App\Models\VendorWallet;
 use App\Models\WalletTransaction;
 use Carbon\Carbon;
@@ -77,10 +79,9 @@ class DigitalMarketplaceSeeder extends Seeder
 
         // 2. Create Vendors
         $vendor1 = Vendor::firstOrCreate(
-            ['user_id' => $vendorUser1->id],
+            ['slug' => 'uiforge-studio'],
             [
                 'store_name' => 'UIForge Studio',
-                'slug' => 'uiforge-studio',
                 'bio' => 'Crafting ultra-modern UI kits, design systems, and frontend templates for modern creators.',
                 'logo_url' => 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150',
                 'banner_url' => 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200',
@@ -90,11 +91,15 @@ class DigitalMarketplaceSeeder extends Seeder
             ]
         );
 
+        VendorUser::firstOrCreate(
+            ['vendor_id' => $vendor1->id, 'user_id' => $vendorUser1->id],
+            ['role' => VendorUserRole::OWNER]
+        );
+
         $vendor2 = Vendor::firstOrCreate(
-            ['user_id' => $vendorUser2->id],
+            ['slug' => 'codecraft-labs'],
             [
                 'store_name' => 'CodeCraft Labs',
-                'slug' => 'codecraft-labs',
                 'bio' => 'Production-ready SaaS boilerplates, API software tools, and full-stack backend solutions.',
                 'logo_url' => 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=150',
                 'banner_url' => 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200',
@@ -102,6 +107,11 @@ class DigitalMarketplaceSeeder extends Seeder
                 'status' => VendorStatus::APPROVED,
                 'payout_details' => ['paypal_email' => 'elena@codecraftlabs.io'],
             ]
+        );
+
+        VendorUser::firstOrCreate(
+            ['vendor_id' => $vendor2->id, 'user_id' => $vendorUser2->id],
+            ['role' => VendorUserRole::OWNER]
         );
 
         // 3. Create Categories
