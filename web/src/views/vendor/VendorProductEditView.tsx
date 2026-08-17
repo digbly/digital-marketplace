@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 import { useGetCategoriesQuery } from '../../store/services/storefrontApi';
@@ -27,7 +27,7 @@ export const VendorProductEditView: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // Set default category when categories load
-  React.useEffect(() => {
+  useEffect(() => {
     if (categories.length > 0 && !categoryId) {
       setCategoryId(categories[0].id);
     }
@@ -40,7 +40,7 @@ export const VendorProductEditView: React.FC = () => {
     try {
       await createProduct({
         name: name.trim(),
-        category_id: categoryId || (categories[0]?.id ?? undefined),
+        category_id: categoryId ? categoryId : undefined,
         product_type: productType,
         price: Number(price),
         sale_price: salePrice ? Number(salePrice) : undefined,

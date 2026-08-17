@@ -55,12 +55,15 @@ export const VendorProductsView: React.FC = () => {
     e.preventDefault();
     if (!activeUploadModal) return;
 
+    if (!selectedFile) {
+      showNotification('error', 'Please select a file to upload (.zip / package).');
+      return;
+    }
+
     try {
       const formData = new FormData();
-      if (selectedFile) {
-        formData.append('file', selectedFile);
-      }
-      formData.append('file_name', fileName.trim() || selectedFile?.name || 'asset.zip');
+      formData.append('file', selectedFile);
+      formData.append('file_name', fileName.trim() || selectedFile.name || 'asset.zip');
       formData.append('version', fileVersion.trim() || '1.0.0');
       formData.append('is_main', '1');
 

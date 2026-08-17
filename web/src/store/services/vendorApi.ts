@@ -114,7 +114,7 @@ export const vendorApi = apiSlice.injectEndpoints({
       query: ({ productId, keys }) => ({
         url: `/vendor/products/${productId}/license-keys`,
         method: 'POST',
-        body: { keys },
+        body: { license_keys: keys },
       }),
       invalidatesTags: ['VendorProducts'],
     }),
