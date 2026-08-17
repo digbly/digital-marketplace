@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
   Search,
   Star,
@@ -9,7 +8,6 @@ import {
   ArrowUpDown,
   Check,
   ShoppingBag,
-  ArrowRight,
   ChevronLeft,
   ChevronRight,
   PackageOpen,
@@ -19,6 +17,7 @@ import {
   useGetCategoriesQuery,
   useGetStorefrontProductsQuery,
 } from '../../store/services/storefrontApi';
+import { ProductCard } from '../../components/marketplace/ProductCard';
 import type { ProductType } from '../../types/marketplace';
 
 export const BrowseProductsView: React.FC = () => {
@@ -27,7 +26,6 @@ export const BrowseProductsView: React.FC = () => {
     setSelectedCategory,
     searchQuery,
     setSearchQuery,
-    addToCart,
   } = useMarketplaceStore();
 
   const [selectedType, setSelectedType] = useState<ProductType | 'all'>('all');
@@ -256,84 +254,7 @@ export const BrowseProductsView: React.FC = () => {
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {filteredProducts.map((product) => (
-                  <div
-                    key={product.id}
-                    className="group rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden hover:border-slate-700 transition flex flex-col justify-between"
-                  >
-                    <div>
-                      {/* Thumbnail */}
-                      <div className="relative aspect-video overflow-hidden bg-slate-800">
-                        {product.thumbnail_url ? (
-                          <img
-                            src={product.thumbnail_url}
-                            alt={product.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-slate-800 text-slate-600">
-                            <Layers className="w-8 h-8" />
-                          </div>
-                        )}
-                        <div className="absolute top-2.5 left-2.5 flex gap-1">
-                          <span className="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase bg-slate-900/80 backdrop-blur text-indigo-300 border border-indigo-500/30">
-                            {product.product_type === 'downloadable_file'
-                              ? 'File'
-                              : product.product_type === 'license_key'
-                              ? 'Key'
-                              : 'Bundle'}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Content */}
-                      <div className="p-4 space-y-2">
-                        <div className="flex items-center justify-between text-xs text-slate-400">
-                          <span className="text-slate-400 truncate max-w-[140px]">{product.vendor?.store_name || 'Creator'}</span>
-                          <div className="flex items-center gap-1 text-amber-400 font-semibold">
-                            <Star className="w-3 h-3 fill-amber-400" />
-                            <span>{(product.rating_avg || 0).toFixed(1)}</span>
-                          </div>
-                        </div>
-
-                        <Link to={`/products/${product.slug}`} className="block group-hover:text-indigo-400 transition">
-                          <h3 className="font-bold text-sm text-white line-clamp-1">{product.name}</h3>
-                        </Link>
-
-                        <p className="text-xs text-slate-400 line-clamp-2">
-                          {product.short_description || product.description || 'Verified digital product asset.'}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Footer Action */}
-                    <div className="p-4 pt-3 border-t border-slate-800 flex items-center justify-between">
-                      <div>
-                        <div className="flex items-baseline gap-1.5">
-                          <span className="text-base font-bold text-white">
-                            ${(product.effective_price ?? product.price ?? 0).toFixed(2)}
-                          </span>
-                          {product.sale_price && (
-                            <span className="text-[11px] text-slate-500 line-through">${product.price.toFixed(2)}</span>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="flex gap-1.5">
-                        <button
-                          onClick={() => addToCart(product)}
-                          className="px-2.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow transition cursor-pointer"
-                        >
-                          Add to Cart
-                        </button>
-                        <Link
-                          to={`/products/${product.slug}`}
-                          className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
-                        >
-                          <ArrowRight className="w-4 h-4" />
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
+                  <ProductCard key={product.id} product={product} />
                 ))}
               </div>
 
