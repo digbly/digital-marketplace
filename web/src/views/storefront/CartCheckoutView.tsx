@@ -8,7 +8,6 @@ import {
   DownloadCloud,
   Key,
   ArrowRight,
-  Lock,
   Copy,
   Check,
   Zap,
@@ -20,7 +19,7 @@ import type { Order, OrderItem } from '../../types/marketplace';
 export const CartCheckoutView: React.FC = () => {
   const { cart, removeFromCart, clearCart, getCartTotal, checkoutCart } = useMarketplaceStore();
 
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal' | 'crypto' | 'wallet'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'mock' | 'stripe' | 'paypal'>('mock');
   const [discountCode, setDiscountCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState<number>(0);
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
@@ -239,24 +238,31 @@ export const CartCheckoutView: React.FC = () => {
           <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-4">
             <h2 className="font-bold text-sm text-white">Select Payment Method</h2>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
-                { id: 'card', label: 'Credit / Debit Card', icon: CreditCard },
-                { id: 'paypal', label: 'PayPal Express', icon: Zap },
-                { id: 'crypto', label: 'Crypto (USDC / USDT)', icon: Lock },
-                { id: 'wallet', label: 'Platform Wallet', icon: ShieldCheck },
+                { id: 'mock', label: 'Platform Instant Gateway', desc: 'Instant Simulation for Testing', icon: ShieldCheck },
+                { id: 'stripe', label: 'Stripe Card / Apple Pay', desc: 'Secure Credit & Debit Cards', icon: CreditCard },
+                { id: 'paypal', label: 'PayPal Express', desc: 'PayPal Account & Wallets', icon: Zap },
               ].map((pm) => (
                 <button
                   key={pm.id}
                   onClick={() => setPaymentMethod(pm.id as any)}
-                  className={`p-4 rounded-2xl border text-left flex items-center gap-3 transition ${
+                  className={`p-4 rounded-2xl border text-left flex flex-col justify-between gap-3 transition ${
                     paymentMethod === pm.id
                       ? 'bg-indigo-600/20 border-indigo-500 text-white font-semibold shadow-md shadow-indigo-600/10'
                       : 'bg-slate-800/60 border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
                   }`}
                 >
-                  <pm.icon className="w-5 h-5 text-indigo-400" />
-                  <span className="text-xs font-medium">{pm.label}</span>
+                  <div className="flex items-center justify-between w-full">
+                    <pm.icon className="w-5 h-5 text-indigo-400" />
+                    {paymentMethod === pm.id && (
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></span>
+                    )}
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white">{pm.label}</div>
+                    <div className="text-[10px] text-slate-400 mt-0.5">{pm.desc}</div>
+                  </div>
                 </button>
               ))}
             </div>

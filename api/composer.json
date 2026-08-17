@@ -34,7 +34,7 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
-            "Modules\\": "modules/",
+            "Modules\\Payment\\": "modules/Payment/app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }
@@ -86,7 +86,7 @@
         },
         "merge-plugin": {
             "include": [
-                "Modules/*/composer.json"
+                "modules/*/composer.json"
             ]
         }
     },

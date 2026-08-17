@@ -884,7 +884,7 @@
                 "tags": [
                     "Storefront - Checkout"
                 ],
-                "summary": "Process checkout for cart items",
+                "summary": "Process checkout for cart items and initiate payment",
                 "operationId": "e8629493e8a579df2ba6cce0ede89887",
                 "requestBody": {
                     "required": true,
@@ -898,7 +898,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Order created successfully",
+                        "description": "Order & payment initialized successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -908,6 +908,17 @@
                                         },
                                         "data": {
                                             "$ref": "#/components/schemas/App\\Http\\Resources\\OrderResource"
+                                        },
+                                        "payment": {
+                                            "type": "Modules\\Payment\\Http\\Resources\\PaymentResource"
+                                        },
+                                        "redirect_url": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "client_secret": {
+                                            "type": "string",
+                                            "nullable": true
                                         }
                                     },
                                     "type": "object"
