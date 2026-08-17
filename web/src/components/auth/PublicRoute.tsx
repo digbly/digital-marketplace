@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../store/hooks';
 
 interface PublicRouteProps {
@@ -8,9 +8,11 @@ interface PublicRouteProps {
 
 export const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const location = useLocation();
 
   if (isAuthenticated) {
-    return <Navigate to="/admin" replace />;
+    const from = (location.state as any)?.from?.pathname || '/vendor';
+    return <Navigate to={from} replace />;
   }
 
   return <>{children}</>;

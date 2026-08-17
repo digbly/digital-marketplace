@@ -11,6 +11,7 @@ use App\Models\VendorWallet;
 use App\Services\PayoutService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
 class VendorWalletController extends Controller
@@ -18,6 +19,18 @@ class VendorWalletController extends Controller
     public function __construct(
         protected PayoutService $payoutService
     ) {}
+
+    protected function getVendor(): Vendor
+    {
+        return Vendor::firstOrCreate(
+            ['user_id' => Auth::id()],
+            [
+                'store_name' => Auth::user()->name . "'s Store",
+                'slug' => Str::slug(Auth::user()->name . '-' . Str::random(5)),
+                'status' => 'approved',
+            ]
+        );
+    }
 
     #[OA\Get(
         path: "/api/vendor/wallet",
@@ -38,7 +51,7 @@ class VendorWalletController extends Controller
     )]
     public function index(): JsonResponse
     {
-        $vendor = Vendor::where('user_id', Auth::id())->firstOrFail();
+        $vendor = $this->getVendor();
         $wallet = VendorWallet::with(['transactions' => function ($q) {
             $q->latest()->limit(50);
         }])->firstOrCreate(['vendor_id' => $vendor->id]);
@@ -79,7 +92,7 @@ class VendorWalletController extends Controller
     )]
     public function requestPayout(CreatePayoutRequest $request): JsonResponse
     {
-        $vendor = Vendor::where('user_id', Auth::id())->firstOrFail();
+        $vendor = $this->getVendor();
 
         $payout = $this->payoutService->requestPayout(
             $vendor,

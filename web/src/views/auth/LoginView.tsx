@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Mail, Lock, Eye, EyeOff, LogIn, AlertCircle } from 'lucide-react';
 import { Input } from '../../components/ui/Input';
@@ -15,6 +15,7 @@ interface LoginFormInputs {
 
 export const LoginView: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -39,7 +40,8 @@ export const LoginView: React.FC = () => {
         password: data.password,
       }).unwrap();
 
-      navigate('/admin');
+      const from = (location.state as any)?.from?.pathname || '/vendor';
+      navigate(from, { replace: true });
     } catch {
       // Backend error is displayed via apiError state
     }

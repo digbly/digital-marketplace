@@ -13,14 +13,21 @@ import {
   X,
   Trash2,
   ArrowRight,
+  LogOut,
+  LogIn,
+  UserPlus,
 } from 'lucide-react';
 import { useMarketplaceStore } from '../../store/marketplaceStore';
+import { useAppSelector } from '../../store/hooks';
+import { useLogoutMutation } from '../../store/services/authApi';
 import type { UserRole } from '../../types/marketplace';
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, user: authUser } = useAppSelector((state) => state.auth);
+  const [logout] = useLogoutMutation();
+
   const {
-    currentUser,
     activeRole,
     switchRole,
     cart,
@@ -35,6 +42,17 @@ export const Navbar: React.FC = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+    } catch {
+      // Ignore
+    } finally {
+      setIsUserMenuOpen(false);
+      navigate('/');
+    }
+  };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -267,66 +285,92 @@ export const Navbar: React.FC = () => {
             )}
           </div>
 
-          {/* User Account / Role Badge */}
-          <div className="relative">
-            <button
-              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-              className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-slate-800 transition"
-            >
-              <img
-                src={currentUser.avatar || ''}
-                alt={currentUser.name}
-                className="w-8 h-8 rounded-full object-cover border border-indigo-500/40"
-              />
-              <div className="hidden lg:block text-left">
-                <div className="text-xs font-semibold text-slate-200">{currentUser.name}</div>
-                <div className="text-[10px] text-indigo-400 uppercase tracking-wider font-bold">
-                  {currentUser.role}
+          {/* User Account / Login Buttons */}
+          {isAuthenticated ? (
+            <div className="relative">
+              <button
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-slate-800 transition"
+              >
+                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs border border-indigo-500/40">
+                  {authUser?.name?.charAt(0).toUpperCase() || 'U'}
                 </div>
-              </div>
-            </button>
+                <div className="hidden lg:block text-left">
+                  <div className="text-xs font-semibold text-slate-200 truncate max-w-[120px]">
+                    {authUser?.name || 'My Account'}
+                  </div>
+                  <div className="text-[10px] text-purple-400 uppercase tracking-wider font-bold">
+                    Vendor / User
+                  </div>
+                </div>
+              </button>
 
-            {isUserMenuOpen && (
-              <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-2 z-50">
-                <div className="px-3 py-2 border-b border-slate-800">
-                  <p className="text-xs font-semibold text-white">{currentUser.name}</p>
-                  <p className="text-[11px] text-slate-400 truncate">{currentUser.email}</p>
+              {isUserMenuOpen && (
+                <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-2 z-50">
+                  <div className="px-3 py-2 border-b border-slate-800">
+                    <p className="text-xs font-semibold text-white truncate">{authUser?.name}</p>
+                    <p className="text-[11px] text-slate-400 truncate">{authUser?.email}</p>
+                  </div>
+                  <div className="py-1">
+                    <Link
+                      to="/buyer/library"
+                      onClick={() => setIsUserMenuOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
+                    >
+                      <DownloadCloud className="w-4 h-4 text-emerald-400" />
+                      My Digital Library
+                    </Link>
+                    <Link
+                      to="/vendor"
+                      onClick={() => {
+                        switchRole('vendor');
+                        setIsUserMenuOpen(false);
+                      }}
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
+                    >
+                      <Store className="w-4 h-4 text-purple-400" />
+                      Vendor Dashboard
+                    </Link>
+                    <Link
+                      to="/admin"
+                      onClick={() => {
+                        switchRole('admin');
+                        setIsUserMenuOpen(false);
+                      }}
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
+                    >
+                      <ShieldCheck className="w-4 h-4 text-amber-400" />
+                      Super Admin Portal
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Sign Out
+                    </button>
+                  </div>
                 </div>
-                <div className="py-1">
-                  <Link
-                    to="/buyer/library"
-                    onClick={() => setIsUserMenuOpen(false)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
-                  >
-                    <DownloadCloud className="w-4 h-4 text-emerald-400" />
-                    My Digital Library
-                  </Link>
-                  <Link
-                    to="/vendor"
-                    onClick={() => {
-                      switchRole('vendor');
-                      setIsUserMenuOpen(false);
-                    }}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
-                  >
-                    <Store className="w-4 h-4 text-purple-400" />
-                    Vendor Dashboard
-                  </Link>
-                  <Link
-                    to="/admin"
-                    onClick={() => {
-                      switchRole('admin');
-                      setIsUserMenuOpen(false);
-                    }}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
-                  >
-                    <ShieldCheck className="w-4 h-4 text-amber-400" />
-                    Super Admin Portal
-                  </Link>
-                </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link
+                to="/auth/login"
+                className="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-1.5"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>Sign In</span>
+              </Link>
+              <Link
+                to="/auth/register"
+                className="px-3.5 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition flex items-center gap-1.5"
+              >
+                <UserPlus className="w-4 h-4" />
+                <span className="hidden sm:inline">Register</span>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </header>

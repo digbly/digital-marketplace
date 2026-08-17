@@ -6,16 +6,26 @@ import {
   PlusCircle,
   Clock,
   Wallet,
+  Loader2,
+  ArrowRight,
 } from 'lucide-react';
-import { useMarketplaceStore } from '../../store/marketplaceStore';
+import {
+  useGetVendorWalletQuery,
+  useGetVendorProductsQuery,
+} from '../../store/services/vendorApi';
 
 export const VendorDashboardView: React.FC = () => {
-  const { vendorWallet, vendorProducts } = useMarketplaceStore();
+  const { data: walletResponse, isLoading: isWalletLoading } = useGetVendorWalletQuery();
+  const { data: productsResponse, isLoading: isProductsLoading } = useGetVendorProductsQuery();
 
-  const totalProducts = vendorProducts.length;
-  const totalEarnings = vendorWallet.total_earned;
-  const availableBalance = vendorWallet.balance;
-  const holdingBalance = vendorWallet.holding_balance;
+  const wallet = walletResponse?.data;
+  const products = productsResponse?.data || [];
+
+  const totalProducts = products.length;
+  const totalEarnings = wallet?.total_earned ?? 0;
+  const availableBalance = wallet?.balance ?? 0;
+  const holdingBalance = wallet?.holding_balance ?? 0;
+  const transactions = wallet?.transactions || [];
 
   return (
     <div className="space-y-8">
@@ -54,7 +64,13 @@ export const VendorDashboardView: React.FC = () => {
               <Wallet className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold text-white">${availableBalance.toFixed(2)}</div>
+          <div className="text-2xl font-bold text-white">
+            {isWalletLoading ? (
+              <Loader2 className="w-6 h-6 animate-spin text-emerald-400" />
+            ) : (
+              `$${availableBalance.toFixed(2)}`
+            )}
+          </div>
           <div className="text-[11px] text-emerald-400 font-medium">Ready for instant payout</div>
         </div>
 
@@ -65,8 +81,14 @@ export const VendorDashboardView: React.FC = () => {
               <Clock className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold text-amber-400">${holdingBalance.toFixed(2)}</div>
-          <div className="text-[11px] text-slate-400">Unlocks in 3 - 7 days</div>
+          <div className="text-2xl font-bold text-amber-400">
+            {isWalletLoading ? (
+              <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
+            ) : (
+              `$${holdingBalance.toFixed(2)}`
+            )}
+          </div>
+          <div className="text-[11px] text-slate-400">Holding buffer for disputes</div>
         </div>
 
         <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
@@ -76,8 +98,14 @@ export const VendorDashboardView: React.FC = () => {
               <TrendingUp className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold text-white">${totalEarnings.toFixed(2)}</div>
-          <div className="text-[11px] text-purple-400 font-medium">+18.4% this month</div>
+          <div className="text-2xl font-bold text-white">
+            {isWalletLoading ? (
+              <Loader2 className="w-6 h-6 animate-spin text-purple-400" />
+            ) : (
+              `$${totalEarnings.toFixed(2)}`
+            )}
+          </div>
+          <div className="text-[11px] text-purple-400 font-medium">Accumulated revenue</div>
         </div>
 
         <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
@@ -87,7 +115,13 @@ export const VendorDashboardView: React.FC = () => {
               <Package className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold text-white">{totalProducts}</div>
+          <div className="text-2xl font-bold text-white">
+            {isProductsLoading ? (
+              <Loader2 className="w-6 h-6 animate-spin text-indigo-400" />
+            ) : (
+              totalProducts
+            )}
+          </div>
           <div className="text-[11px] text-slate-400">Active in marketplace</div>
         </div>
       </div>
@@ -99,46 +133,88 @@ export const VendorDashboardView: React.FC = () => {
             <h2 className="text-base font-bold text-white">Your Listed Digital Products</h2>
             <p className="text-xs text-slate-400">Manage files, license keys, and pricing</p>
           </div>
-          <Link to="/vendor/products" className="text-xs font-semibold text-purple-400 hover:underline">
-            View All ({vendorProducts.length}) →
+          <Link
+            to="/vendor/products"
+            className="text-xs font-semibold text-purple-400 hover:underline flex items-center gap-1"
+          >
+            <span>View All ({products.length})</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="divide-y divide-slate-800">
-          {vendorProducts.map((p) => (
-            <div key={p.id} className="py-4 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3 min-w-0">
-                <img
-                  src={p.thumbnail_url || ''}
-                  alt={p.name}
-                  className="w-12 h-12 rounded-xl object-cover bg-slate-800 flex-shrink-0"
-                />
-                <div className="min-w-0">
-                  <h4 className="text-sm font-bold text-white truncate">{p.name}</h4>
-                  <div className="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
-                    <span className="text-emerald-400 font-semibold">${p.effective_price.toFixed(2)}</span>
-                    <span>•</span>
-                    <span>{p.total_sales} sales</span>
-                    <span>•</span>
-                    <span className="capitalize text-slate-500">{p.product_type.replace('_', ' ')}</span>
+        {isProductsLoading ? (
+          <div className="py-8 flex justify-center items-center gap-2 text-xs text-slate-400">
+            <Loader2 className="w-5 h-5 animate-spin text-purple-400" />
+            <span>Loading products...</span>
+          </div>
+        ) : products.length === 0 ? (
+          <div className="py-10 text-center space-y-3">
+            <Package className="w-10 h-10 text-slate-600 mx-auto" />
+            <p className="text-sm font-semibold text-slate-300">No products uploaded yet</p>
+            <p className="text-xs text-slate-500">
+              Start selling by uploading your first digital product or software asset.
+            </p>
+            <Link
+              to="/vendor/products/new"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>Create First Product</span>
+            </Link>
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-800">
+            {products.slice(0, 5).map((p) => (
+              <div key={p.id} className="py-4 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3 min-w-0">
+                  {p.thumbnail_url ? (
+                    <img
+                      src={p.thumbnail_url}
+                      alt={p.name}
+                      className="w-12 h-12 rounded-xl object-cover bg-slate-800 flex-shrink-0"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 rounded-xl bg-purple-900/30 border border-purple-500/20 flex items-center justify-center text-purple-300 font-bold flex-shrink-0">
+                      <Package className="w-6 h-6" />
+                    </div>
+                  )}
+                  <div className="min-w-0">
+                    <h4 className="text-sm font-bold text-white truncate">{p.name}</h4>
+                    <div className="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
+                      <span className="text-emerald-400 font-semibold">
+                        ${(p.sale_price || p.price || 0).toFixed(2)}
+                      </span>
+                      <span>•</span>
+                      <span>{p.total_sales || 0} sales</span>
+                      <span>•</span>
+                      <span className="capitalize text-slate-500">
+                        {p.product_type?.replace('_', ' ')}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  Published
-                </span>
-                <Link
-                  to={`/vendor/products`}
-                  className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs"
-                >
-                  Edit
-                </Link>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <span
+                    className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
+                      p.status === 'published'
+                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                        : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                    }`}
+                  >
+                    {p.status || 'Published'}
+                  </span>
+                  <Link
+                    to="/vendor/products"
+                    className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition"
+                  >
+                    Manage
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Recent Earnings Activity */}
@@ -148,24 +224,47 @@ export const VendorDashboardView: React.FC = () => {
             <h2 className="text-base font-bold text-white">Recent Ledger Transactions</h2>
             <p className="text-xs text-slate-400">Order earnings and payout withdrawals</p>
           </div>
-          <Link to="/vendor/wallet" className="text-xs font-semibold text-purple-400 hover:underline">
-            Full Wallet History →
+          <Link
+            to="/vendor/wallet"
+            className="text-xs font-semibold text-purple-400 hover:underline flex items-center gap-1"
+          >
+            <span>Full Wallet History</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="divide-y divide-slate-800">
-          {vendorWallet.transactions?.map((txn) => (
-            <div key={txn.id} className="py-3 flex items-center justify-between text-xs">
-              <div>
-                <p className="font-semibold text-slate-200">{txn.description}</p>
-                <p className="text-[10px] text-slate-500">{new Date(txn.created_at).toLocaleString()}</p>
+        {isWalletLoading ? (
+          <div className="py-6 flex justify-center items-center gap-2 text-xs text-slate-400">
+            <Loader2 className="w-5 h-5 animate-spin text-purple-400" />
+            <span>Loading transactions...</span>
+          </div>
+        ) : transactions.length === 0 ? (
+          <div className="py-6 text-center text-xs text-slate-500">
+            No transactions recorded yet. Transactions will appear here after orders or payout requests.
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-800">
+            {transactions.slice(0, 5).map((txn) => (
+              <div key={txn.id} className="py-3 flex items-center justify-between text-xs">
+                <div>
+                  <p className="font-semibold text-slate-200">{txn.description}</p>
+                  <p className="text-[10px] text-slate-500">
+                    {new Date(txn.created_at).toLocaleString()}
+                  </p>
+                </div>
+                <span
+                  className={`font-bold ${
+                    txn.amount > 0 ? 'text-emerald-400' : 'text-rose-400'
+                  }`}
+                >
+                  {txn.amount > 0
+                    ? `+$${txn.amount.toFixed(2)}`
+                    : `-$${Math.abs(txn.amount).toFixed(2)}`}
+                </span>
               </div>
-              <span className={`font-bold ${txn.amount > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                {txn.amount > 0 ? `+$${txn.amount.toFixed(2)}` : `-$${Math.abs(txn.amount).toFixed(2)}`}
-              </span>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

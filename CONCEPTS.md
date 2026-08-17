@@ -27,3 +27,14 @@ The platform financial ledger tracking vendor net revenues (`effective_price - c
 
 ### Payout Request (`payout_request`)
 A vendor withdrawal workflow where funds are reserved from available wallet balance and reviewed/settled by a Super Admin via bank transfer or PayPal.
+
+## Payment & Settlement
+
+### Payment Gateway Driver (`payment_method`)
+An encapsulated adapter implementing a common payment interface to negotiate checkouts, session redirects, and cryptographic webhook signatures across heterogeneous gateways (e.g. Stripe Checkout/PaymentIntents, PayPal Orders v2, Mock Sandbox).
+
+### Payment Webhook Idempotency
+The guarantee that identical webhook events delivered by external payment gateways (via retries or network replays) are executed at most once, enforced by unique event tracking and ledger state checks.
+
+### Decoupled Fulfillment
+The architectural separation where payment settlement dispatches asynchronous domain events to trigger digital delivery and ledger crediting rather than fulfilling inline within checkout or webhook controller handlers.

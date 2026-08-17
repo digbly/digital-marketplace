@@ -9,11 +9,19 @@ import {
   ShoppingBag,
   Store,
   ArrowUpRight,
+  Loader2,
 } from 'lucide-react';
-import { useMarketplaceStore } from '../../store/marketplaceStore';
+import {
+  useGetVendorProfileQuery,
+  useGetVendorWalletQuery,
+} from '../../store/services/vendorApi';
 
 export const VendorLayout: React.FC = () => {
-  const { vendorWallet } = useMarketplaceStore();
+  const { data: profileResponse, isLoading: isProfileLoading } = useGetVendorProfileQuery();
+  const { data: walletResponse, isLoading: isWalletLoading } = useGetVendorWalletQuery();
+
+  const vendor = profileResponse?.data;
+  const wallet = walletResponse?.data;
 
   const navItems = [
     { label: 'Overview', to: '/vendor', icon: LayoutDashboard, end: true },
@@ -23,6 +31,10 @@ export const VendorLayout: React.FC = () => {
     { label: 'Earnings & Wallet', to: '/vendor/wallet', icon: Wallet },
     { label: 'Store Profile', to: '/vendor/settings', icon: Store },
   ];
+
+  const storeInitials = vendor?.store_name
+    ? vendor.store_name.slice(0, 2).toUpperCase()
+    : 'VS';
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
@@ -34,22 +46,42 @@ export const VendorLayout: React.FC = () => {
           <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sticky top-24 space-y-6">
             {/* Store Badge */}
             <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-purple-900/30 to-indigo-900/30 border border-purple-500/20">
-              <div className="w-10 h-10 rounded-lg bg-purple-600/30 border border-purple-400/40 flex items-center justify-center text-purple-300 font-bold">
-                UI
+              <div className="w-10 h-10 rounded-lg bg-purple-600/30 border border-purple-400/40 flex items-center justify-center text-purple-300 font-bold overflow-hidden">
+                {vendor?.logo_url ? (
+                  <img
+                    src={vendor.logo_url}
+                    alt={vendor.store_name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  storeInitials
+                )}
               </div>
               <div className="min-w-0 flex-1">
-                <div className="text-xs text-purple-300 font-semibold uppercase tracking-wider">Vendor Store</div>
-                <div className="text-sm font-bold text-white truncate">UIForge Studio</div>
+                <div className="text-xs text-purple-300 font-semibold uppercase tracking-wider">
+                  Vendor Store
+                </div>
+                <div className="text-sm font-bold text-white truncate">
+                  {isProfileLoading ? 'Loading...' : vendor?.store_name || 'My Digital Store'}
+                </div>
               </div>
             </div>
 
             {/* Quick Wallet Card */}
             <div className="p-3.5 rounded-xl bg-slate-800/60 border border-slate-700/60">
               <div className="text-[11px] text-slate-400 font-medium">Available to Withdraw</div>
-              <div className="text-xl font-bold text-white mt-1">${vendorWallet.balance.toFixed(2)}</div>
+              <div className="text-xl font-bold text-white mt-1">
+                {isWalletLoading ? (
+                  <Loader2 className="w-5 h-5 animate-spin text-purple-400" />
+                ) : (
+                  `$${(wallet?.balance || 0).toFixed(2)}`
+                )}
+              </div>
               <div className="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
                 <span>Holding in Escrow:</span>
-                <span className="text-amber-400 font-semibold">${vendorWallet.holding_balance.toFixed(2)}</span>
+                <span className="text-amber-400 font-semibold">
+                  ${(wallet?.holding_balance || 0).toFixed(2)}
+                </span>
               </div>
             </div>
 
