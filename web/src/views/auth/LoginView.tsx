@@ -40,7 +40,7 @@ export const LoginView: React.FC = () => {
         password: data.password,
       }).unwrap();
 
-      const from = (location.state as any)?.from?.pathname || '/vendor';
+      const from = (location.state as { from?: { pathname?: string } })?.from?.pathname || '/vendor';
       navigate(from, { replace: true });
     } catch {
       // Backend error is displayed via apiError state

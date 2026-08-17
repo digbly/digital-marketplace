@@ -72,10 +72,9 @@ export const CartCheckoutView: React.FC = () => {
 
       clearCart();
       setCompletedOrder(response.data);
-    } catch (err: any) {
-      setCheckoutError(
-        err?.data?.message || 'Checkout failed. Please check your payment details and try again.'
-      );
+    } catch (err: unknown) {
+      const errorMsg = (err as { data?: { message?: string } })?.data?.message || 'Checkout failed. Please check your payment details and try again.';
+      setCheckoutError(errorMsg);
     }
   };
 

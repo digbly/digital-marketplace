@@ -52,10 +52,11 @@ export const VendorWalletView: React.FC = () => {
 
       showNotification('success', 'Payout withdrawal request submitted successfully!');
       setIsPayoutModalOpen(false);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { data?: { message?: string } };
       showNotification(
         'error',
-        err?.data?.message || 'Failed to submit payout request. Please try again.'
+        error?.data?.message || 'Failed to submit payout request. Please try again.'
       );
     }
   };

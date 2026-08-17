@@ -11,7 +11,7 @@ export const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
   const location = useLocation();
 
   if (isAuthenticated) {
-    const from = (location.state as any)?.from?.pathname || '/vendor';
+    const from = (location.state as { from?: { pathname?: string } })?.from?.pathname || '/vendor';
     return <Navigate to={from} replace />;
   }
 

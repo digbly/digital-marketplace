@@ -15,7 +15,7 @@ export interface VendorProfilePayload {
   logo_url?: string | null;
   banner_url?: string | null;
   payout_method?: string | null;
-  payout_account_details?: Record<string, any> | null;
+  payout_account_details?: Record<string, unknown> | null;
 }
 
 export interface StoreProductPayload {
@@ -39,7 +39,7 @@ export interface UpdateProductPayload extends Partial<StoreProductPayload> {
 export interface CreatePayoutPayload {
   amount: number;
   payout_method: string;
-  payout_account_details: Record<string, any>;
+  payout_account_details: Record<string, unknown>;
 }
 
 export const vendorApi = apiSlice.injectEndpoints({

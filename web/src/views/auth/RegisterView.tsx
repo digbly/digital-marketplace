@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { Mail, Lock, Eye, EyeOff, User, UserPlus, AlertCircle } from 'lucide-react';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
@@ -22,7 +22,7 @@ export const RegisterView: React.FC = () => {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors },
   } = useForm<RegisterFormInputs>({
     mode: 'onTouched',
@@ -35,7 +35,7 @@ export const RegisterView: React.FC = () => {
     },
   });
 
-  const passwordValue = watch('password') || '';
+  const passwordValue = (useWatch({ control, name: 'password' }) as string) || '';
 
   const [registerUser, { isLoading, error: apiError }] = useRegisterMutation();
 

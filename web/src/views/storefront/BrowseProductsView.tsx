@@ -83,7 +83,7 @@ export const BrowseProductsView: React.FC = () => {
             <select
               value={sortBy}
               onChange={(e) => {
-                setSortBy(e.target.value as any);
+                setSortBy(e.target.value as 'newest' | 'popular' | 'rating' | 'price_asc' | 'price_desc');
                 setPage(1);
               }}
               className="bg-transparent text-white font-semibold focus:outline-none cursor-pointer"
@@ -132,7 +132,7 @@ export const BrowseProductsView: React.FC = () => {
                 <button
                   key={item.id}
                   onClick={() => {
-                    setSelectedType(item.id as any);
+                    setSelectedType(item.id as 'all' | 'downloadable_file' | 'license_key' | 'bundle');
                     setPage(1);
                   }}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition cursor-pointer ${
