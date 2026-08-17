@@ -10,9 +10,10 @@ use App\Http\Controllers\Buyer\LibraryController;
 use App\Http\Controllers\Storefront\CategoryController;
 use App\Http\Controllers\Storefront\CheckoutController;
 use App\Http\Controllers\Storefront\ProductController;
+use App\Http\Controllers\Vendor\VendorController;
+use App\Http\Controllers\Vendor\VendorMemberController;
 use App\Http\Controllers\Vendor\VendorOrderController;
 use App\Http\Controllers\Vendor\VendorProductController;
-use App\Http\Controllers\Vendor\VendorProfileController;
 use App\Http\Controllers\Vendor\VendorWalletController;
 use Illuminate\Support\Facades\Route;
 
@@ -62,25 +63,36 @@ Route::prefix('buyer')->group(function () {
     });
 });
 
-// Vendor Portal Area
-Route::prefix('vendor')->middleware('auth:api')->group(function () {
-    Route::get('profile', [VendorProfileController::class, 'show']);
-    Route::put('profile', [VendorProfileController::class, 'update']);
+// Vendor Management & Scoped Portal Area
+Route::prefix('vendors')->middleware('auth:api')->group(function () {
+    Route::get('/', [VendorController::class, 'index']);
+    Route::post('/', [VendorController::class, 'store']);
 
-    // Products & Assets
-    Route::get('products', [VendorProductController::class, 'index']);
-    Route::post('products', [VendorProductController::class, 'store']);
-    Route::put('products/{id}', [VendorProductController::class, 'update']);
-    Route::delete('products/{id}', [VendorProductController::class, 'destroy']);
-    Route::post('products/{id}/files', [VendorProductController::class, 'uploadFile']);
-    Route::post('products/{id}/license-keys', [VendorProductController::class, 'importLicenseKeys']);
+    Route::prefix('{vendor}')->middleware('vendor.member')->group(function () {
+        Route::get('/', [VendorController::class, 'show']);
+        Route::put('/', [VendorController::class, 'update'])->middleware('vendor.member:owner,manager');
 
-    // Orders & Sales
-    Route::get('orders', [VendorOrderController::class, 'index']);
+        // Members
+        Route::get('members', [VendorMemberController::class, 'index']);
+        Route::post('members', [VendorMemberController::class, 'store'])->middleware('vendor.member:owner,manager');
+        Route::put('members/{user}', [VendorMemberController::class, 'update'])->middleware('vendor.member:owner,manager');
+        Route::delete('members/{user}', [VendorMemberController::class, 'destroy'])->middleware('vendor.member:owner,manager');
 
-    // Wallet & Payout
-    Route::get('wallet', [VendorWalletController::class, 'index']);
-    Route::post('payouts', [VendorWalletController::class, 'requestPayout']);
+        // Products & Assets
+        Route::get('products', [VendorProductController::class, 'index']);
+        Route::post('products', [VendorProductController::class, 'store']);
+        Route::put('products/{id}', [VendorProductController::class, 'update']);
+        Route::delete('products/{id}', [VendorProductController::class, 'destroy']);
+        Route::post('products/{id}/files', [VendorProductController::class, 'uploadFile']);
+        Route::post('products/{id}/license-keys', [VendorProductController::class, 'importLicenseKeys']);
+
+        // Orders & Sales
+        Route::get('orders', [VendorOrderController::class, 'index']);
+
+        // Wallet & Payout (Owner only)
+        Route::get('wallet', [VendorWalletController::class, 'index'])->middleware('vendor.member:owner');
+        Route::post('payouts', [VendorWalletController::class, 'requestPayout'])->middleware('vendor.member:owner');
+    });
 });
 
 // Super Admin Area

@@ -100,8 +100,9 @@ export const ProductDetailView: React.FC = () => {
       }).unwrap();
       setIsReviewModalOpen(false);
       setReviewComment('');
-    } catch (err: any) {
-      setReviewError(err?.data?.message || 'Could not submit review. Please ensure you have purchased this product.');
+    } catch (err: unknown) {
+      const errorMsg = (err as { data?: { message?: string } })?.data?.message || 'Could not submit review. Please ensure you have purchased this product.';
+      setReviewError(errorMsg);
     }
   };
 

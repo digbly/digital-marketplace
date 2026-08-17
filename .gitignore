@@ -4,6 +4,7 @@ dist/
 coverage/
 .idea/
 .vscode/
+/.context
 api/vendor/
 api/.env
 api/storage/*.key

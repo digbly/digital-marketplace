@@ -44,7 +44,7 @@ interface MarketplaceState {
   addVendorProduct: (productData: Partial<Product>) => Product;
   updateVendorProduct: (productId: string, productData: Partial<Product>) => void;
   deleteVendorProduct: (productId: string) => void;
-  requestPayout: (amount: number, method: string, details: Record<string, any>) => void;
+  requestPayout: (amount: number, method: string, details: Record<string, unknown>) => void;
 
   // Admin Portal State
   payoutRequests: PayoutRequest[];
@@ -238,7 +238,7 @@ export const useMarketplaceStore = create<MarketplaceState>((set, get) => ({
       vendorProducts: state.vendorProducts.filter((p) => p.id !== productId),
     }));
   },
-  requestPayout: (amount: number, method: string, details: Record<string, any>) => {
+  requestPayout: (amount: number, method: string, details: Record<string, unknown>) => {
     const { vendorWallet, payoutRequests } = get();
     if (vendorWallet.balance < amount) return;
 

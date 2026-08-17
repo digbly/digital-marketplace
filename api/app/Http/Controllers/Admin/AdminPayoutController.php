@@ -37,7 +37,7 @@ class AdminPayoutController extends Controller
     )]
     public function index(Request $request): JsonResponse
     {
-        $payouts = PayoutRequest::with('vendor.user')
+        $payouts = PayoutRequest::with('vendor.vendorUsers.user')
             ->latest()
             ->paginate($request->integer('per_page', 20));
 

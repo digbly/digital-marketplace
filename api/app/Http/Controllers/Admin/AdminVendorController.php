@@ -31,7 +31,7 @@ class AdminVendorController extends Controller
     )]
     public function index(Request $request): JsonResponse
     {
-        $vendors = Vendor::with('user')
+        $vendors = Vendor::with('vendorUsers.user')
             ->latest()
             ->paginate($request->integer('per_page', 20));
 

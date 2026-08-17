@@ -56,8 +56,9 @@ export const BuyerLibraryView: React.FC = () => {
         setReviewModalItem(null);
         setComment('');
       }, 1500);
-    } catch (err: any) {
-      setReviewError(err?.data?.message || 'Failed to submit review. Please try again.');
+    } catch (err: unknown) {
+      const errorMsg = (err as { data?: { message?: string } })?.data?.message || 'Failed to submit review. Please try again.';
+      setReviewError(errorMsg);
     }
   };
 

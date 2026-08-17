@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use App\Enums\VendorStatus;
+use App\Enums\VendorUserRole;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,7 +17,6 @@ class Vendor extends Model
     use HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
-        'user_id',
         'store_name',
         'slug',
         'bio',
@@ -36,9 +36,47 @@ class Vendor extends Model
         ];
     }
 
-    public function user(): BelongsTo
+    public function resolveRouteBindingQuery($query, $value, $field = null)
     {
-        return $this->belongsTo(User::class);
+        return $query->where('id', $value)->orWhere('slug', $value);
+    }
+
+    public function vendorUsers(): HasMany
+    {
+        return $this->hasMany(VendorUser::class);
+    }
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'vendor_users')
+            ->withPivot(['id', 'role'])
+            ->withTimestamps();
+    }
+
+    public function isOwner(User $user): bool
+    {
+        return $this->vendorUsers()
+            ->where('user_id', $user->id)
+            ->where('role', VendorUserRole::OWNER)
+            ->exists();
+    }
+
+    public function hasMember(User $user, ?VendorUserRole $role = null): bool
+    {
+        $query = $this->vendorUsers()->where('user_id', $user->id);
+
+        if ($role !== null) {
+            $query->where('role', $role);
+        }
+
+        return $query->exists();
+    }
+
+    public function getUserRole(User $user): ?VendorUserRole
+    {
+        $vendorUser = $this->vendorUsers()->where('user_id', $user->id)->first();
+
+        return $vendorUser?->role;
     }
 
     public function products(): HasMany

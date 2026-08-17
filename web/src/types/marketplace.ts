@@ -96,7 +96,7 @@ export interface Product {
   rating_avg: number;
   rating_count: number;
   is_featured: boolean;
-  attributes?: Record<string, any>;
+  attributes?: Record<string, unknown>;
   created_at: string;
   vendor?: Vendor;
   category?: Category;
@@ -175,7 +175,7 @@ export interface PayoutRequest {
   vendor_id: string;
   amount: number;
   payout_method: string;
-  payout_account_details: Record<string, any>;
+  payout_account_details: Record<string, unknown>;
   status: 'pending' | 'approved' | 'rejected' | 'processed';
   admin_note?: string | null;
   processed_at?: string | null;

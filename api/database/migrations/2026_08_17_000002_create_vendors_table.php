@@ -14,7 +14,6 @@ return new class extends Migration
     {
         Schema::create('vendors', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('store_name')->unique();
             $table->string('slug')->unique();
             $table->text('bio')->nullable();

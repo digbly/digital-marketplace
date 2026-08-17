@@ -8,16 +8,18 @@ use App\Models\OrderItem;
 use App\Models\Vendor;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use OpenApi\Attributes as OA;
 
 class VendorOrderController extends Controller
 {
     #[OA\Get(
-        path: "/api/vendor/orders",
+        path: "/api/vendors/{vendor}/orders",
         summary: "List all sold items and customer orders for the vendor",
         security: [["passport" => []]],
         tags: ["Vendor - Orders"],
+        parameters: [
+            new OA\Parameter(name: "vendor", in: "path", required: true, schema: new OA\Schema(type: "string")),
+        ],
         responses: [
             new OA\Response(
                 response: 200,
@@ -30,14 +32,8 @@ class VendorOrderController extends Controller
             ),
         ]
     )]
-    public function index(Request $request): JsonResponse
+    public function index(Request $request, Vendor $vendor): JsonResponse
     {
-        $vendor = Vendor::where('user_id', Auth::id())->first();
-
-        if (!$vendor) {
-            return response()->json(['data' => []]);
-        }
-
         $items = OrderItem::with(['order.buyer', 'product'])
             ->where('vendor_id', $vendor->id)
             ->latest()
