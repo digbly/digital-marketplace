@@ -20,9 +20,7 @@ export const VendorProductEditView: React.FC = () => {
   const [shortDesc, setShortDesc] = useState('');
   const [description, setDescription] = useState('');
   const [version, setVersion] = useState('1.0.0');
-  const [thumbnailUrl, setThumbnailUrl] = useState(
-    'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600'
-  );
+  const [thumbnailUrl, setThumbnailUrl] = useState('');
   const [demoUrl, setDemoUrl] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
