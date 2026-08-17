@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
-import { Sparkles, Sun, Moon, ArrowLeft, CheckCircle2, ShieldCheck, Zap, Globe } from 'lucide-react';
+import { Layers, Sparkles, Sun, Moon, ArrowLeft, DownloadCloud, Key, ShieldCheck } from 'lucide-react';
 import { useTheme } from '../../context/useTheme';
 
 export const AuthLayout: React.FC = () => {
@@ -21,29 +21,29 @@ export const AuthLayout: React.FC = () => {
           to="/"
           className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-xl"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/25 group-hover:scale-105 transition-transform">
-            <Sparkles className="w-5 h-5 animate-subtle-float" />
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/25 group-hover:scale-105 transition-transform">
+            <Layers className="w-5 h-5" />
           </div>
           <div>
             <div className="font-extrabold text-lg text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5">
-              <span>SiteStore</span>
+              <span>DigiStore</span>
               <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
-                AI
+                PRO
               </span>
             </div>
             <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              Intelligent Website Engine
+              Digital Asset Multi-Vendor Marketplace
             </p>
           </div>
         </Link>
 
         <div className="flex items-center gap-3">
           <Link
-            to="/admin"
+            to="/"
             className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white px-3 py-2 rounded-xl hover:bg-slate-200/50 dark:hover:bg-white/[0.05] transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Go to Admin</span>
+            <span>Back to Storefront</span>
           </Link>
 
           {/* Theme Toggle Button */}
@@ -72,38 +72,38 @@ export const AuthLayout: React.FC = () => {
 
             <div className="relative z-10 space-y-6">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs font-semibold text-indigo-600 dark:text-indigo-400">
-                <Zap className="w-3.5 h-3.5 text-amber-400" />
-                <span>Next-Gen AI Website Builder</span>
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Premier Digital Creator Platform</span>
               </div>
 
               <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
-                Build & scale high-performing websites with AI in seconds.
+                Buy, Sell & License Premium Digital Assets.
               </h2>
 
               <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Generate production-ready layouts, manage multiple client brands, and automate SEO optimization with cutting-edge artificial intelligence.
+                Explore verified source code boilerplates, UI templates, design systems, and software license keys with instant automated delivery.
               </p>
 
               <div className="pt-4 space-y-3.5 border-t border-slate-200/50 dark:border-white/[0.08]">
                 <div className="flex items-center gap-3 text-xs text-slate-700 dark:text-slate-200 font-medium">
                   <div className="w-6 h-6 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 shrink-0">
-                    <CheckCircle2 className="w-4 h-4" />
+                    <DownloadCloud className="w-4 h-4" />
                   </div>
-                  <span>100+ Designer Templates & Archetypes</span>
+                  <span>Instant Encrypted Downloads & Tokenized Links</span>
                 </div>
 
                 <div className="flex items-center gap-3 text-xs text-slate-700 dark:text-slate-200 font-medium">
                   <div className="w-6 h-6 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-500 shrink-0">
-                    <Globe className="w-4 h-4" />
+                    <Key className="w-4 h-4" />
                   </div>
-                  <span>Instant Custom Domain & Edge CDN Deployments</span>
+                  <span>Automated License Key Pools & Quotas</span>
                 </div>
 
                 <div className="flex items-center gap-3 text-xs text-slate-700 dark:text-slate-200 font-medium">
                   <div className="w-6 h-6 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-500 shrink-0">
                     <ShieldCheck className="w-4 h-4" />
                   </div>
-                  <span>Enterprise Security & JWT Role Access</span>
+                  <span>Multi-Vendor Stores & Escrow Wallet Settlements</span>
                 </div>
               </div>
             </div>
@@ -111,7 +111,7 @@ export const AuthLayout: React.FC = () => {
             {/* Testimonial / Social proof footer */}
             <div className="relative z-10 mt-8 p-4 rounded-2xl bg-white/40 dark:bg-white/[0.04] border border-white/40 dark:border-white/[0.06] backdrop-blur-sm">
               <p className="text-xs italic text-slate-600 dark:text-slate-300">
-                &ldquo;SiteStore AI reduced our landing page delivery time from 3 weeks to under 15 minutes.&rdquo;
+                &ldquo;DigiStore PRO made publishing our developer kits and managing software licenses effortless.&rdquo;
               </p>
               <div className="mt-2.5 flex items-center gap-2.5">
                 <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 text-white text-[10px] font-bold flex items-center justify-center">
@@ -119,7 +119,7 @@ export const AuthLayout: React.FC = () => {
                 </div>
                 <div>
                   <div className="text-xs font-semibold text-slate-900 dark:text-white">Alex Tran</div>
-                  <div className="text-[10px] text-slate-500 dark:text-slate-400">Head of Growth at TechWave</div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400">Lead Creator at TechWave</div>
                 </div>
               </div>
             </div>
@@ -136,7 +136,7 @@ export const AuthLayout: React.FC = () => {
 
       {/* Footer */}
       <footer className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400 border-t border-slate-200/60 dark:border-white/[0.06]">
-        <div>© 2026 SiteStore AI. All rights reserved.</div>
+        <div>© 2026 DigiStore PRO. All rights reserved.</div>
         <div className="flex items-center gap-6">
           <a href="#privacy" className="hover:text-indigo-500 transition-colors">
             Privacy Policy

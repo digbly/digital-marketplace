@@ -82,7 +82,7 @@ export const RegisterView: React.FC = () => {
           Create an account
         </h1>
         <p className="text-xs text-slate-500 dark:text-slate-400">
-          Start generating AI-powered websites with SiteStore AI
+          Join DigiStore PRO to buy and sell premium digital assets
         </p>
       </div>
 

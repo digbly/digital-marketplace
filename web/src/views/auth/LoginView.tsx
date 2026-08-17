@@ -57,7 +57,7 @@ export const LoginView: React.FC = () => {
           Welcome back
         </h1>
         <p className="text-xs text-slate-500 dark:text-slate-400">
-          Enter your credentials to access your SiteStore AI workspace
+          Enter your credentials to access your DigiStore PRO account
         </p>
       </div>
 
