@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 import { useGetCategoriesQuery } from '../../store/services/storefrontApi';
@@ -10,10 +10,10 @@ export const VendorProductEditView: React.FC = () => {
   const { data: categoriesResponse, isLoading: isCategoriesLoading } = useGetCategoriesQuery();
   const [createProduct, { isLoading: isCreating }] = useCreateVendorProductMutation();
 
-  const categories = categoriesResponse?.data || [];
+  const categories = useMemo(() => categoriesResponse?.data || [], [categoriesResponse?.data]);
 
   const [name, setName] = useState('');
-  const [categoryId, setCategoryId] = useState('');
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>('');
   const [productType, setProductType] = useState<ProductType>('downloadable_file');
   const [price, setPrice] = useState<number>(49.00);
   const [salePrice, setSalePrice] = useState<number | undefined>(undefined);
@@ -24,12 +24,7 @@ export const VendorProductEditView: React.FC = () => {
   const [demoUrl, setDemoUrl] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Set default category when categories load
-  useEffect(() => {
-    if (categories.length > 0 && !categoryId) {
-      setCategoryId(categories[0].id);
-    }
-  }, [categories, categoryId]);
+  const categoryId = selectedCategoryId || (categories.length > 0 ? categories[0].id : '');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,9 +45,10 @@ export const VendorProductEditView: React.FC = () => {
       }).unwrap();
 
       navigate('/vendor/products');
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { data?: { message?: string }; message?: string };
       setErrorMsg(
-        err?.data?.message || err?.message || 'Failed to create product. Please check fields.'
+        error?.data?.message || error?.message || 'Failed to create product. Please check fields.'
       );
     }
   };
@@ -116,7 +112,7 @@ export const VendorProductEditView: React.FC = () => {
               ) : (
                 <select
                   value={categoryId}
-                  onChange={(e) => setCategoryId(e.target.value)}
+                  onChange={(e) => setSelectedCategoryId(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500"
                 >
                   {categories.map((c) => (
@@ -139,7 +135,7 @@ export const VendorProductEditView: React.FC = () => {
               </label>
               <select
                 value={productType}
-                onChange={(e) => setProductType(e.target.value as any)}
+                onChange={(e) => setProductType(e.target.value as ProductType)}
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500"
               >
                 <option value="downloadable_file">Downloadable File (.zip / .fig)</option>

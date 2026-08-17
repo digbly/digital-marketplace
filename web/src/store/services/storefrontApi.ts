@@ -31,7 +31,7 @@ export interface CheckoutPayload {
 export interface CheckoutResponseData {
   message: string;
   data: Order;
-  payment?: any;
+  payment?: Record<string, unknown>;
   redirect_url?: string | null;
   client_secret?: string | null;
 }
