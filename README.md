@@ -1,6 +1,10 @@
 # Digital Marketplace
 
-A multi-vendor e-commerce platform for selling digital products — downloadable files, software license keys, and bundles.
+A multi-vendor digital marketplace connecting creators and buyers of digital products. Vendors list and sell their digital assets — downloadable files, software license keys, or bundled packages — while buyers discover, purchase, and securely access their purchases through a personal library.
+
+The platform supports three user roles: **Buyers** browse the storefront and manage their purchases; **Vendors** run their own store with product management, revenue tracking, and payout requests; **Admins** oversee the marketplace with vendor approvals, product moderation, commission management, and analytics.
+
+Payments flow through a centralized wallet with escrow, and digital delivery is handled via signed temporary URLs and automatic license key assignment — keeping assets secure and access controlled.
 
 ## Tech Stack
 
