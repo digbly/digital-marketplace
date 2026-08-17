@@ -3,15 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   Sparkles,
   ArrowRight,
-  DownloadCloud,
-  Key,
-  ShieldCheck,
-  Zap,
   TrendingUp,
   Flame,
   Clock,
-  Layers,
   PackageOpen,
+  LayoutGrid,
 } from 'lucide-react';
 import { useMarketplaceStore } from '../../store/marketplaceStore';
 import {
@@ -45,23 +41,23 @@ const ProductSection: React.FC<ProductSectionProps> = ({
   emptySubtitle = 'Check back soon for new digital assets in this section.',
 }) => {
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5">
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2 border-b border-slate-800/60">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-2 border-b border-slate-800/60">
         <div>
           <div className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-400 uppercase tracking-wider mb-1">
             {icon}
             <span>{tagline}</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">{title}</h2>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">{description}</p>
+          <h2 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">{title}</h2>
+          <p className="text-xs sm:text-sm text-slate-400 mt-0.5">{description}</p>
         </div>
         <Link
           to={viewAllLink}
           className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-400 hover:text-indigo-300 transition-colors group self-start sm:self-auto"
         >
           <span>View all</span>
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </Link>
       </div>
 
@@ -84,9 +80,9 @@ const ProductSection: React.FC<ProductSectionProps> = ({
           ))}
         </div>
       ) : products.length === 0 ? (
-        <div className="p-8 sm:p-12 rounded-2xl bg-slate-900/40 border border-slate-800 text-center space-y-3">
-          <PackageOpen className="w-10 h-10 text-slate-500 mx-auto" />
-          <h3 className="text-sm sm:text-base font-bold text-white">{emptyTitle}</h3>
+        <div className="p-8 sm:p-10 rounded-2xl bg-slate-900/40 border border-slate-800 text-center space-y-3">
+          <PackageOpen className="w-9 h-9 text-slate-500 mx-auto" />
+          <h3 className="text-sm font-bold text-white">{emptyTitle}</h3>
           <p className="text-xs text-slate-400 max-w-md mx-auto">{emptySubtitle}</p>
           <Link
             to="/browse"
@@ -137,126 +133,95 @@ export const HomeView: React.FC = () => {
   const popularProducts = popularData?.data || [];
 
   return (
-    <div className="space-y-20 pb-12">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden pt-12 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800/80 bg-radial-[at_50%_0%] from-indigo-950/60 via-slate-950 to-slate-950">
-        <div className="max-w-5xl mx-auto text-center space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold">
+    <div className="space-y-12 pb-12">
+      {/* Compact Hero Section */}
+      <section className="relative overflow-hidden pt-8 pb-10 px-4 sm:px-6 lg:px-8 border-b border-slate-800/80 bg-radial-[at_50%_0%] from-indigo-950/50 via-slate-950 to-slate-950">
+        <div className="max-w-4xl mx-auto text-center space-y-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold">
             <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
             <span>Next-Gen Multi-Vendor Digital Marketplace</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
             Premium Digital Assets,{' '}
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400">
               Built for Modern Makers.
             </span>
           </h1>
 
-          <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Discover verified SaaS boilerplates, UI design systems, code scripts, and software license keys from elite independent creators worldwide.
+          <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
+            Discover verified SaaS boilerplates, UI kits, code scripts, and software license keys from elite independent creators worldwide.
           </p>
 
-          {/* Call to Actions */}
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+          {/* Compact Call to Actions */}
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <Link
               to="/browse"
-              className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 flex items-center gap-2 transition"
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-indigo-600/30 flex items-center gap-2 transition"
             >
               <span>Explore Marketplace</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
             <Link
               to="/vendor"
-              className="px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-sm transition"
+              className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-xs sm:text-sm transition"
             >
-              Start Selling Your Assets
+              Start Selling
             </Link>
-          </div>
-
-          {/* Feature Highlights */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-10 border-t border-slate-800/60 max-w-4xl mx-auto text-left">
-            <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
-              <div className="flex items-center gap-2 text-indigo-400 mb-1">
-                <DownloadCloud className="w-4 h-4" />
-                <span className="text-xs font-bold text-slate-200">Instant Download</span>
-              </div>
-              <p className="text-[11px] text-slate-400">Secure signed URLs with lifetime access.</p>
-            </div>
-            <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
-              <div className="flex items-center gap-2 text-amber-400 mb-1">
-                <Key className="w-4 h-4" />
-                <span className="text-xs font-bold text-slate-200">License Key Gen</span>
-              </div>
-              <p className="text-[11px] text-slate-400">Automated key pool & activation.</p>
-            </div>
-            <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
-              <div className="flex items-center gap-2 text-emerald-400 mb-1">
-                <ShieldCheck className="w-4 h-4" />
-                <span className="text-xs font-bold text-slate-200">Escrow Security</span>
-              </div>
-              <p className="text-[11px] text-slate-400">Platform held wallet & buyer protection.</p>
-            </div>
-            <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
-              <div className="flex items-center gap-2 text-purple-400 mb-1">
-                <Zap className="w-4 h-4" />
-                <span className="text-xs font-bold text-slate-200">Multi-Vendor</span>
-              </div>
-              <p className="text-[11px] text-slate-400">Independent creator storefronts.</p>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Category Pills Bar */}
+      {/* Horizontal Category Pill Chips Bar */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-xl font-bold text-white">Browse by Category</h2>
-            <p className="text-xs text-slate-400">Explore curated collections of digital goods</p>
-          </div>
-          <Link to="/browse" className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
-            <span>View all</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+          <button
+            onClick={() => {
+              setSelectedCategory(null);
+              navigate('/browse');
+            }}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-indigo-600/20 border border-indigo-500/40 text-indigo-300 hover:bg-indigo-600/30 transition shrink-0 cursor-pointer"
+          >
+            <LayoutGrid className="w-3.5 h-3.5" />
+            <span>All Categories</span>
+          </button>
 
-        {isCategoriesLoading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-            {[1, 2, 3, 4, 5].map((n) => (
-              <div key={n} className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 animate-pulse space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-slate-800" />
-                <div className="h-4 bg-slate-800 rounded w-3/4" />
-                <div className="h-3 bg-slate-800/60 rounded w-1/2" />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-            {categories.map((cat) => (
+          {isCategoriesLoading ? (
+            <div className="flex items-center gap-2">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <div key={n} className="h-7 w-24 rounded-full bg-slate-800 animate-pulse shrink-0" />
+              ))}
+            </div>
+          ) : (
+            categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => {
                   setSelectedCategory(cat.id);
                   navigate('/browse');
                 }}
-                className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-indigo-500/50 hover:bg-slate-800/80 text-left transition group cursor-pointer"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-slate-900/80 border border-slate-800 hover:border-indigo-500/50 hover:bg-slate-800 text-slate-300 hover:text-white transition shrink-0 cursor-pointer"
               >
                 <div
-                  className="w-10 h-10 rounded-xl mb-3 flex items-center justify-center text-white"
-                  style={{ backgroundColor: `${cat.color || '#6366f1'}25`, border: `1px solid ${cat.color || '#6366f1'}50` }}
-                >
-                  <Layers className="w-5 h-5" style={{ color: cat.color || '#6366f1' }} />
-                </div>
-                <h3 className="text-sm font-semibold text-slate-200 group-hover:text-white truncate">{cat.name}</h3>
-                <p className="text-[11px] text-slate-400 line-clamp-1 mt-1">{cat.description || 'Explore digital assets'}</p>
+                  className="w-2 h-2 rounded-full"
+                  style={{ backgroundColor: cat.color || '#6366f1' }}
+                />
+                <span>{cat.name}</span>
               </button>
-            ))}
-          </div>
-        )}
+            ))
+          )}
+
+          <Link
+            to="/browse"
+            className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 ml-auto shrink-0 hidden sm:flex items-center gap-1 pl-2"
+          >
+            <span>View catalog</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
       </section>
 
-      {/* SECTION 1: Featured & Trending Products */}
+      {/* SECTION 1: Featured & Trending Products (Now Immediately Above the Fold!) */}
       <ProductSection
         icon={<TrendingUp className="w-3.5 h-3.5" />}
         tagline="Trending Now"
@@ -296,17 +261,17 @@ export const HomeView: React.FC = () => {
       />
 
       {/* Trust & Guarantee Banner */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="rounded-3xl bg-gradient-to-r from-purple-950/40 via-indigo-950/40 to-slate-900 border border-slate-800 p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-2 text-center md:text-left">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">Sell your digital products to thousands of creators</h2>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+        <div className="rounded-3xl bg-gradient-to-r from-purple-950/40 via-indigo-950/40 to-slate-900 border border-slate-800 p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-1.5 text-center md:text-left">
+            <h2 className="text-xl sm:text-2xl font-bold text-white">Sell your digital products to thousands of creators</h2>
             <p className="text-xs sm:text-sm text-slate-400 max-w-xl">
               Keep up to 90% of your earnings. Instant automated deliveries, encrypted key vaults, and automated payouts.
             </p>
           </div>
           <Link
             to="/vendor"
-            className="px-6 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm shrink-0 shadow-lg shadow-indigo-600/30 transition"
+            className="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm shrink-0 shadow-lg shadow-indigo-600/30 transition"
           >
             Become a Creator Vendor
           </Link>
