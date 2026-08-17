@@ -1,0 +1,15 @@
+node_modules/
+vendor/
+.env
+.DS_Store
+dist/
+coverage/
+.idea/
+.vscode/
+api/vendor/
+api/.env
+api/storage/*.key
+api/storage/logs/
+api/storage/framework/
+web/node_modules/
+web/dist/

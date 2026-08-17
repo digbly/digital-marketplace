@@ -1,0 +1,2791 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "AI Website API Documentation",
+        "description": "API documentation for AI Website backend service",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/admin/analytics": {
+            "get": {
+                "tags": [
+                    "Admin - Analytics"
+                ],
+                "summary": "Get platform-wide statistics, revenue and performance metrics",
+                "operationId": "492f5e84608d67584b6038582560f70a",
+                "responses": {
+                    "200": {
+                        "description": "Analytics metrics",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "total_revenue": {
+                                            "type": "number",
+                                            "format": "float"
+                                        },
+                                        "total_commission": {
+                                            "type": "number",
+                                            "format": "float"
+                                        },
+                                        "total_orders": {
+                                            "type": "integer"
+                                        },
+                                        "total_products": {
+                                            "type": "integer"
+                                        },
+                                        "total_vendors": {
+                                            "type": "integer"
+                                        },
+                                        "total_buyers": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/payouts": {
+            "get": {
+                "tags": [
+                    "Admin - Payouts"
+                ],
+                "summary": "List all vendor payout requests",
+                "operationId": "48d6926927340a58e7c436a4700383da",
+                "responses": {
+                    "200": {
+                        "description": "List of payout requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/App\\Http\\Resources\\PayoutRequestResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/payouts/{id}/process": {
+            "put": {
+                "tags": [
+                    "Admin - Payouts"
+                ],
+                "summary": "Process or reject vendor payout request",
+                "operationId": "48ed6aaefe37a0c9ea023f6820ae3902",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Admin\\ProcessPayoutRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payout processed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\PayoutRequestResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/products": {
+            "get": {
+                "tags": [
+                    "Admin - Products"
+                ],
+                "summary": "List all products for moderation across all vendors",
+                "operationId": "19a54880febc574f8a6a094db19a3155",
+                "responses": {
+                    "200": {
+                        "description": "List of all products",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/App\\Http\\Resources\\ProductResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/products/{id}/moderate": {
+            "put": {
+                "tags": [
+                    "Admin - Products"
+                ],
+                "summary": "Moderate product status (published/rejected/featured)",
+                "operationId": "9b552751cd938d96c1908b98af05fa54",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Admin\\ModerateProductRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product moderation updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\ProductResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/vendors": {
+            "get": {
+                "tags": [
+                    "Admin - Vendors"
+                ],
+                "summary": "List all vendors for admin management",
+                "operationId": "abaabe8c84db13b43c1e43cf56837574",
+                "responses": {
+                    "200": {
+                        "description": "List of vendors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/App\\Http\\Resources\\VendorResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/vendors/{id}/status": {
+            "put": {
+                "tags": [
+                    "Admin - Vendors"
+                ],
+                "summary": "Approve, reject, or update vendor status and commission rate",
+                "operationId": "75d939fe2c96bca2efbeafbc56a37f5d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Admin\\ApproveVendorRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Vendor status updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\VendorResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/user/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login User",
+                "operationId": "user.login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Auth\\LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\AuthResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation or Authentication Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/user/refresh-token": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Refresh Token",
+                "operationId": "user.refresh",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Auth\\RefreshTokenRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token Refreshed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\TokenResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid Refresh Token"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/user/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register New User",
+                "operationId": "user.register",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Auth\\RegisterRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registration Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\UserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/user/resend-verification-email": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Resend Verification Email",
+                "operationId": "user.resend-verification-email",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Auth\\ResendVerificationEmailRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Verification Link Sent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\MessageResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/user/email/verify/{id}/{hash}": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Verify Email",
+                "operationId": "user.verify-email",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "hash",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email Verified",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\MessageResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid Token"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/user/forgot-password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Forgot Password",
+                "operationId": "user.forgot-password",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Auth\\ForgotPasswordRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset link emailed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\MessageResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/user/reset-password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Reset Password",
+                "operationId": "user.reset-password",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Auth\\ResetPasswordRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password Reset Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\MessageResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/user/change-password": {
+            "put": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Change Password",
+                "operationId": "user.change-password",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Auth\\ChangePasswordRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password Changed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\MessageResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/user/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout",
+                "operationId": "user.logout",
+                "responses": {
+                    "200": {
+                        "description": "Logout Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\MessageResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/user/social/{driver}/redirect": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login User with Social Redirect",
+                "operationId": "user.social.redirect",
+                "parameters": [
+                    {
+                        "name": "driver",
+                        "in": "path",
+                        "description": "Social Driver (google, facebook, github...)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Redirect URL generated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\SocialRedirectResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Provider error"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/user/social/{driver}/callback": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login User with Social Callback",
+                "operationId": "user.social.callback",
+                "parameters": [
+                    {
+                        "name": "driver",
+                        "in": "path",
+                        "description": "Social Driver",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Social Login Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\AuthResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Authentication failed"
+                    }
+                }
+            }
+        },
+        "/api/buyer/library": {
+            "get": {
+                "tags": [
+                    "Buyer - Library"
+                ],
+                "summary": "Get buyer's purchased digital items library",
+                "operationId": "b65a86c5837b1bb381da4089ed1cd268",
+                "responses": {
+                    "200": {
+                        "description": "List of purchased items with downloads and license keys",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/App\\Http\\Resources\\OrderItemResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/buyer/download/{token}": {
+            "get": {
+                "tags": [
+                    "Buyer - Library"
+                ],
+                "summary": "Download digital asset via secure token",
+                "operationId": "ebc52f5a3f787e359cb3e421d8ff0c76",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Streamed file download"
+                    },
+                    "403": {
+                        "description": "Download expired or limit reached"
+                    },
+                    "404": {
+                        "description": "File not found"
+                    }
+                }
+            }
+        },
+        "/api/buyer/reviews": {
+            "post": {
+                "tags": [
+                    "Buyer - Library"
+                ],
+                "summary": "Submit product review and rating",
+                "operationId": "edd528c80aa799e041cb9db61a74f6cc",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Buyer\\CreateReviewRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Review submitted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\ReviewResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/storefront/categories": {
+            "get": {
+                "tags": [
+                    "Storefront - Categories"
+                ],
+                "summary": "List all active categories",
+                "operationId": "f05de11e44c7dae0a379990dbc904595",
+                "responses": {
+                    "200": {
+                        "description": "List of categories",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/App\\Http\\Resources\\CategoryResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/storefront/checkout": {
+            "post": {
+                "tags": [
+                    "Storefront - Checkout"
+                ],
+                "summary": "Process checkout for cart items",
+                "operationId": "e8629493e8a579df2ba6cce0ede89887",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Storefront\\CheckoutRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Order created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\OrderResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/storefront/products": {
+            "get": {
+                "tags": [
+                    "Storefront - Products"
+                ],
+                "summary": "List published products with search and filtering",
+                "operationId": "511fc46ee3f6b0b21127e1038bfc150f",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "product_type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_featured",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "newest",
+                                "popular",
+                                "price_asc",
+                                "price_desc",
+                                "rating"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of products",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/App\\Http\\Resources\\ProductResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/storefront/products/{slug}": {
+            "get": {
+                "tags": [
+                    "Storefront - Products"
+                ],
+                "summary": "Get single product detail by slug",
+                "operationId": "890436434fcca47db1d453f8b2382a0e",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\ProductResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                }
+            }
+        },
+        "/api/vendor/orders": {
+            "get": {
+                "tags": [
+                    "Vendor - Orders"
+                ],
+                "summary": "List all sold items and customer orders for the vendor",
+                "operationId": "9bd21a24e9c99863dfdb6741d8794752",
+                "responses": {
+                    "200": {
+                        "description": "List of order items",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/App\\Http\\Resources\\OrderItemResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/vendor/products": {
+            "get": {
+                "tags": [
+                    "Vendor - Products"
+                ],
+                "summary": "List all products belonging to the authenticated vendor",
+                "operationId": "e1419702270640672dc2d929cc77d94d",
+                "responses": {
+                    "200": {
+                        "description": "List of vendor products",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/App\\Http\\Resources\\ProductResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Vendor - Products"
+                ],
+                "summary": "Create a new product by vendor",
+                "operationId": "663935d5aa95fb4173e9ad8013416a87",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Vendor\\StoreProductRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Product created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\ProductResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/vendor/products/{id}": {
+            "put": {
+                "tags": [
+                    "Vendor - Products"
+                ],
+                "summary": "Update existing product",
+                "operationId": "55ae39728be974d210b43bb73318e104",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Vendor\\UpdateProductRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\ProductResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Vendor - Products"
+                ],
+                "summary": "Delete product",
+                "operationId": "7c4be0e88ad8bafdd726fd8e4edcc98b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product deleted successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/vendor/products/{id}/files": {
+            "post": {
+                "tags": [
+                    "Vendor - Products"
+                ],
+                "summary": "Upload digital file for product",
+                "operationId": "5737fab5d7ef940236e56ab4d6d43130",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Vendor\\UploadProductFileRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "File uploaded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\ProductFileResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/vendor/products/{id}/license-keys": {
+            "post": {
+                "tags": [
+                    "Vendor - Products"
+                ],
+                "summary": "Import license keys into product pool",
+                "operationId": "f312fb4c2e66dd64bbbd2d25c606d5f0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Vendor\\ImportLicenseKeysRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "License keys imported successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/vendor/profile": {
+            "get": {
+                "tags": [
+                    "Vendor - Profile"
+                ],
+                "summary": "Get current vendor profile settings",
+                "operationId": "fa973c595165a842b15e9b60b6e8efd3",
+                "responses": {
+                    "200": {
+                        "description": "Vendor profile",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\VendorResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Vendor - Profile"
+                ],
+                "summary": "Update current vendor profile settings",
+                "operationId": "93d932012419075f5f114b8854811167",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Vendor\\StoreVendorProfileRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Vendor profile updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\VendorResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/vendor/wallet": {
+            "get": {
+                "tags": [
+                    "Vendor - Wallet"
+                ],
+                "summary": "Get vendor wallet overview and recent transactions",
+                "operationId": "18f749cb5a002c7c806796ae17a7d4f7",
+                "responses": {
+                    "200": {
+                        "description": "Vendor wallet details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\VendorWalletResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/vendor/payouts": {
+            "post": {
+                "tags": [
+                    "Vendor - Wallet"
+                ],
+                "summary": "Submit payout withdrawal request",
+                "operationId": "40194103640e592de5b9ef187af773d1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/App\\Http\\Requests\\Vendor\\CreatePayoutRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Payout request submitted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/App\\Http\\Resources\\PayoutRequestResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "App\\Http\\Requests\\Admin\\ApproveVendorRequest": {
+                "required": [
+                    "status"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "approved"
+                    },
+                    "commission_rate": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 10,
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Admin\\ModerateProductRequest": {
+                "required": [
+                    "status"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "published"
+                    },
+                    "is_featured": {
+                        "type": "boolean",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Admin\\ProcessPayoutRequest": {
+                "required": [
+                    "status"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "processed"
+                    },
+                    "admin_note": {
+                        "type": "string",
+                        "example": "Transferred via wire transaction #TXN998811",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Auth\\ChangePasswordRequest": {
+                "required": [
+                    "current_password",
+                    "password",
+                    "password_confirmation"
+                ],
+                "properties": {
+                    "current_password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "OldPassword123!"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "NewPassword123!"
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "NewPassword123!"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Auth\\ForgotPasswordRequest": {
+                "required": [
+                    "email"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "admin@example.com"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Auth\\LoginRequest": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "admin@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "password"
+                    },
+                    "remember": {
+                        "type": "boolean",
+                        "example": false,
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Auth\\RefreshTokenRequest": {
+                "required": [
+                    "refresh_token"
+                ],
+                "properties": {
+                    "refresh_token": {
+                        "type": "string",
+                        "example": "def50200..."
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Auth\\RegisterRequest": {
+                "required": [
+                    "name",
+                    "email",
+                    "password",
+                    "password_confirmation"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "john@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "Secret123!"
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "Secret123!"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Auth\\ResendVerificationEmailRequest": {
+                "required": [
+                    "email"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "admin@example.com"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Auth\\ResetPasswordRequest": {
+                "required": [
+                    "token",
+                    "email",
+                    "password",
+                    "password_confirmation"
+                ],
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "example": "abc123token"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "admin@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "NewPassword123!"
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "NewPassword123!"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Buyer\\CreateReviewRequest": {
+                "required": [
+                    "product_id",
+                    "rating"
+                ],
+                "properties": {
+                    "product_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "order_item_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "rating": {
+                        "type": "integer",
+                        "example": 5,
+                        "maximum": 5,
+                        "minimum": 1
+                    },
+                    "comment": {
+                        "type": "string",
+                        "example": "Excellent template and clean code!",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Storefront\\CheckoutRequest": {
+                "required": [
+                    "items",
+                    "payment_method"
+                ],
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "product_id": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "payment_method": {
+                        "type": "string",
+                        "example": "platform_gateway"
+                    },
+                    "discount_code": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Vendor\\CreatePayoutRequest": {
+                "required": [
+                    "amount",
+                    "payout_method",
+                    "payout_account_details"
+                ],
+                "properties": {
+                    "amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 250
+                    },
+                    "payout_method": {
+                        "type": "string",
+                        "example": "bank_transfer"
+                    },
+                    "payout_account_details": {
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Vendor\\ImportLicenseKeysRequest": {
+                "required": [
+                    "license_keys"
+                ],
+                "properties": {
+                    "license_keys": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "KEY-1111-2222",
+                            "KEY-3333-4444"
+                        ]
+                    },
+                    "max_activations": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "expires_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Vendor\\StoreProductRequest": {
+                "required": [
+                    "name",
+                    "price",
+                    "product_type"
+                ],
+                "properties": {
+                    "category_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Next.js SaaS Boilerplate"
+                    },
+                    "short_description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 59
+                    },
+                    "sale_price": {
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "product_type": {
+                        "type": "string",
+                        "example": "downloadable_file"
+                    },
+                    "thumbnail_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "preview_images": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true
+                    },
+                    "demo_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "version": {
+                        "type": "string",
+                        "example": "1.0.0"
+                    },
+                    "download_limit": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "expiry_days": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "attributes": {
+                        "type": "object",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Vendor\\StoreVendorProfileRequest": {
+                "required": [
+                    "store_name"
+                ],
+                "properties": {
+                    "store_name": {
+                        "type": "string",
+                        "example": "Pixel Perfect Design"
+                    },
+                    "bio": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "logo_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "banner_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "payout_details": {
+                        "type": "object",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Vendor\\UpdateProductRequest": {
+                "properties": {
+                    "category_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Next.js SaaS Boilerplate"
+                    },
+                    "short_description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "changelog": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 59
+                    },
+                    "sale_price": {
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "product_type": {
+                        "type": "string",
+                        "example": "downloadable_file"
+                    },
+                    "thumbnail_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "preview_images": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true
+                    },
+                    "demo_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "version": {
+                        "type": "string",
+                        "example": "1.1.0"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "draft"
+                    },
+                    "download_limit": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "expiry_days": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "attributes": {
+                        "type": "object",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Requests\\Vendor\\UploadProductFileRequest": {
+                "required": [
+                    "file"
+                ],
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "version": {
+                        "type": "string",
+                        "example": "1.0.0"
+                    },
+                    "is_main": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\AuthResource": {
+                "required": [
+                    "token",
+                    "user"
+                ],
+                "properties": {
+                    "token": {
+                        "$ref": "#/components/schemas/App\\Http\\Resources\\TokenResource"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/App\\Http\\Resources\\UserResource"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\CategoryResource": {
+                "required": [
+                    "id",
+                    "slug",
+                    "name",
+                    "is_active"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "parent_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "wordpress-themes"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "WordPress Themes"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "icon": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "color": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "sort_order": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\MessageResource": {
+                "required": [
+                    "message"
+                ],
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Operation successful"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\OrderDownloadResource": {
+                "required": [
+                    "id",
+                    "download_token",
+                    "download_count",
+                    "is_expired"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "order_item_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "product_file_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "download_token": {
+                        "type": "string"
+                    },
+                    "download_url": {
+                        "type": "string",
+                        "example": "/api/buyer/download/abcdef123456"
+                    },
+                    "download_count": {
+                        "type": "integer"
+                    },
+                    "max_downloads": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "expires_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "is_expired": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\OrderItemResource": {
+                "required": [
+                    "id",
+                    "product_name",
+                    "product_type",
+                    "price",
+                    "status"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "order_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "product_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "vendor_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "product_name": {
+                        "type": "string"
+                    },
+                    "product_type": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "status": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\OrderResource": {
+                "required": [
+                    "id",
+                    "order_number",
+                    "total_amount",
+                    "payment_status",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "order_number": {
+                        "type": "string",
+                        "example": "ORD-20260817-ABC1"
+                    },
+                    "buyer_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "subtotal_amount": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "discount_amount": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "total_amount": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "payment_method": {
+                        "type": "string"
+                    },
+                    "payment_status": {
+                        "type": "string",
+                        "example": "paid"
+                    },
+                    "transaction_id": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "paid_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\PayoutRequestResource": {
+                "required": [
+                    "id",
+                    "vendor_id",
+                    "amount",
+                    "payout_method",
+                    "status",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "vendor_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 500
+                    },
+                    "payout_method": {
+                        "type": "string",
+                        "example": "bank_transfer"
+                    },
+                    "payout_account_details": {
+                        "type": "object"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "pending"
+                    },
+                    "admin_note": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "processed_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\ProductFileResource": {
+                "required": [
+                    "id",
+                    "file_name",
+                    "original_name",
+                    "file_size",
+                    "version"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "product_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "file_name": {
+                        "type": "string",
+                        "example": "theme-bundle-v1.zip"
+                    },
+                    "original_name": {
+                        "type": "string",
+                        "example": "source_code.zip"
+                    },
+                    "file_size": {
+                        "type": "integer",
+                        "example": 10485760
+                    },
+                    "mime_type": {
+                        "type": "string",
+                        "example": "application/zip"
+                    },
+                    "version": {
+                        "type": "string",
+                        "example": "1.0.0"
+                    },
+                    "is_main": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\ProductLicenseKeyResource": {
+                "required": [
+                    "id",
+                    "license_key",
+                    "status",
+                    "max_activations",
+                    "activation_count"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "product_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "license_key": {
+                        "type": "string",
+                        "example": "ABCD-1234-EFGH-5678"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "available"
+                    },
+                    "max_activations": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "activation_count": {
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "assigned_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "expires_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\ProductResource": {
+                "required": [
+                    "id",
+                    "vendor_id",
+                    "slug",
+                    "name",
+                    "price",
+                    "product_type",
+                    "status"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "vendor_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "category_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "tailwind-dashboard-template"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Tailwind Dashboard Template"
+                    },
+                    "short_description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "changelog": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 49
+                    },
+                    "sale_price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 29,
+                        "nullable": true
+                    },
+                    "effective_price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 29
+                    },
+                    "product_type": {
+                        "type": "string",
+                        "example": "downloadable_file"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "published"
+                    },
+                    "thumbnail_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "preview_images": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true
+                    },
+                    "demo_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "version": {
+                        "type": "string",
+                        "example": "1.0.0"
+                    },
+                    "download_limit": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "expiry_days": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "total_sales": {
+                        "type": "integer",
+                        "example": 120
+                    },
+                    "rating_avg": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 4.8
+                    },
+                    "rating_count": {
+                        "type": "integer",
+                        "example": 15
+                    },
+                    "is_featured": {
+                        "type": "boolean"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\ReviewResource": {
+                "required": [
+                    "id",
+                    "product_id",
+                    "buyer_id",
+                    "rating",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "product_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "buyer_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "rating": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "comment": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\SocialRedirectResource": {
+                "required": [
+                    "redirect_url",
+                    "provider"
+                ],
+                "properties": {
+                    "redirect_url": {
+                        "type": "string",
+                        "example": "https://accounts.google.com/o/oauth2/auth..."
+                    },
+                    "provider": {
+                        "type": "string",
+                        "example": "google"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\TokenResource": {
+                "required": [
+                    "token_type",
+                    "expires_in",
+                    "expires_at",
+                    "access_token",
+                    "refresh_token"
+                ],
+                "properties": {
+                    "token_type": {
+                        "type": "string",
+                        "example": "Bearer"
+                    },
+                    "expires_in": {
+                        "type": "integer",
+                        "example": 31536000
+                    },
+                    "expires_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2027-08-16T09:00:00.000000Z"
+                    },
+                    "access_token": {
+                        "type": "string",
+                        "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIs..."
+                    },
+                    "refresh_token": {
+                        "type": "string",
+                        "example": "def50200..."
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\UserResource": {
+                "required": [
+                    "id",
+                    "name",
+                    "email",
+                    "role",
+                    "status",
+                    "created_at",
+                    "updated_at"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "9c3c6f1a-6df7-4b1e-b8eb-9d8e6c7d9a10"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "john@example.com"
+                    },
+                    "role": {
+                        "type": "string",
+                        "example": "customer"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "active"
+                    },
+                    "avatar": {
+                        "type": "string",
+                        "example": "https://example.com/avatar.jpg",
+                        "nullable": true
+                    },
+                    "email_verified_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-08-16T09:00:00.000000Z",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-08-16T09:00:00.000000Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-08-16T09:00:00.000000Z"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\VendorResource": {
+                "required": [
+                    "id",
+                    "user_id",
+                    "store_name",
+                    "slug",
+                    "status",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "user_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "store_name": {
+                        "type": "string",
+                        "example": "Elite Themes"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "elite-themes"
+                    },
+                    "bio": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "logo_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "banner_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "commission_rate": {
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "approved"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\VendorWalletResource": {
+                "required": [
+                    "id",
+                    "balance",
+                    "holding_balance",
+                    "total_earned",
+                    "total_withdrawn",
+                    "currency"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "vendor_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "balance": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1250
+                    },
+                    "holding_balance": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 150
+                    },
+                    "total_earned": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 5000
+                    },
+                    "total_withdrawn": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 3600
+                    },
+                    "currency": {
+                        "type": "string",
+                        "example": "USD"
+                    }
+                },
+                "type": "object"
+            },
+            "App\\Http\\Resources\\WalletTransactionResource": {
+                "required": [
+                    "id",
+                    "type",
+                    "amount",
+                    "balance_after",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "wallet_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "type": {
+                        "type": "string",
+                        "example": "order_earning"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 45
+                    },
+                    "balance_before": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "balance_after": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Admin - Analytics",
+            "description": "Admin - Analytics"
+        },
+        {
+            "name": "Admin - Payouts",
+            "description": "Admin - Payouts"
+        },
+        {
+            "name": "Admin - Products",
+            "description": "Admin - Products"
+        },
+        {
+            "name": "Admin - Vendors",
+            "description": "Admin - Vendors"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Buyer - Library",
+            "description": "Buyer - Library"
+        },
+        {
+            "name": "Storefront - Categories",
+            "description": "Storefront - Categories"
+        },
+        {
+            "name": "Storefront - Checkout",
+            "description": "Storefront - Checkout"
+        },
+        {
+            "name": "Storefront - Products",
+            "description": "Storefront - Products"
+        },
+        {
+            "name": "Vendor - Orders",
+            "description": "Vendor - Orders"
+        },
+        {
+            "name": "Vendor - Products",
+            "description": "Vendor - Products"
+        },
+        {
+            "name": "Vendor - Profile",
+            "description": "Vendor - Profile"
+        },
+        {
+            "name": "Vendor - Wallet",
+            "description": "Vendor - Wallet"
+        }
+    ]
+}
