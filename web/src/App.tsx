@@ -1,7 +1,9 @@
-import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useParams, Outlet, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ThemeProvider } from './context/ThemeContext';
 import { Loader2 } from 'lucide-react';
+import { supportedLanguages } from './i18n';
 
 // Main Storefront Layout (Eager for instant storefront render)
 import { StorefrontLayout } from './components/layout/StorefrontLayout';
@@ -52,73 +54,106 @@ function RouteLoadingFallback() {
   );
 }
 
+function LanguageWrapper() {
+  const { lang } = useParams<{ lang?: string }>();
+  const { i18n } = useTranslation();
+  const location = useLocation();
+
+  const isSupported = lang ? supportedLanguages.some((l) => l.code === lang) : false;
+
+  useEffect(() => {
+    if (lang && isSupported && i18n.language !== lang) {
+      i18n.changeLanguage(lang);
+    }
+  }, [lang, isSupported, i18n]);
+
+  if (!lang || !isSupported) {
+    const currentLang = i18n.resolvedLanguage || i18n.language || 'en';
+    const cleanPath = lang ? location.pathname.replace(`/${lang}`, '') : location.pathname;
+    return <Navigate to={`/${currentLang}${cleanPath || ''}${location.search}${location.hash}`} replace />;
+  }
+
+  return <Outlet />;
+}
+
+function RootRedirect() {
+  const { i18n } = useTranslation();
+  const location = useLocation();
+  const currentLang = i18n.resolvedLanguage || i18n.language || 'en';
+  const targetPath = `/${currentLang}${location.pathname === '/' ? '' : location.pathname}${location.search}${location.hash}`;
+  return <Navigate to={targetPath} replace />;
+}
+
 export function App() {
   return (
     <ThemeProvider>
       <BrowserRouter>
         <Suspense fallback={<RouteLoadingFallback />}>
           <Routes>
-            {/* Public Auth Routes */}
-            <Route
-              path="/auth"
-              element={
-                <PublicRoute>
-                  <AuthLayout />
-                </PublicRoute>
-              }
-            >
-              <Route path="login" element={<LoginView />} />
-              <Route path="register" element={<RegisterView />} />
-              <Route path="forgot-password" element={<ForgotPasswordView />} />
-              <Route path="reset-password" element={<ResetPasswordView />} />
-              <Route path="verify-email" element={<VerifyEmailView />} />
-              <Route index element={<Navigate to="/auth/login" replace />} />
+            <Route path="/:lang" element={<LanguageWrapper />}>
+              {/* Public Auth Routes */}
+              <Route
+                path="auth"
+                element={
+                  <PublicRoute>
+                    <AuthLayout />
+                  </PublicRoute>
+                }
+              >
+                <Route path="login" element={<LoginView />} />
+                <Route path="register" element={<RegisterView />} />
+                <Route path="forgot-password" element={<ForgotPasswordView />} />
+                <Route path="reset-password" element={<ResetPasswordView />} />
+                <Route path="verify-email" element={<VerifyEmailView />} />
+                <Route index element={<Navigate to="login" replace />} />
+              </Route>
+
+              {/* Public Storefront & Buyer Routes */}
+              <Route element={<StorefrontLayout />}>
+                <Route index element={<HomeView />} />
+                <Route path="browse" element={<BrowseProductsView />} />
+                <Route path="products/:slug" element={<ProductDetailView />} />
+                <Route path="checkout" element={<CartCheckoutView />} />
+                <Route path="buyer/library" element={<BuyerLibraryView />} />
+              </Route>
+
+              {/* Protected Vendor Portal Routes */}
+              <Route
+                path="vendor"
+                element={
+                  <ProtectedRoute>
+                    <VendorLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<VendorDashboardView />} />
+                <Route path="products" element={<VendorProductsView />} />
+                <Route path="products/new" element={<VendorProductEditView />} />
+                <Route path="orders" element={<VendorOrdersView />} />
+                <Route path="wallet" element={<VendorWalletView />} />
+                <Route path="settings" element={<VendorSettingsView />} />
+              </Route>
+
+              {/* Super Admin Portal Routes */}
+              <Route
+                path="admin"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <AdminPortalLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<AdminDashboardView />} />
+                <Route path="vendors" element={<AdminVendorsView />} />
+                <Route path="products" element={<AdminProductsView />} />
+                <Route path="payouts" element={<AdminPayoutsView />} />
+                <Route path="settings" element={<AdminSettingsView />} />
+              </Route>
             </Route>
 
-            {/* Public Storefront & Buyer Routes */}
-            <Route element={<StorefrontLayout />}>
-              <Route index element={<HomeView />} />
-              <Route path="/browse" element={<BrowseProductsView />} />
-              <Route path="/products/:slug" element={<ProductDetailView />} />
-              <Route path="/checkout" element={<CartCheckoutView />} />
-              <Route path="/buyer/library" element={<BuyerLibraryView />} />
-            </Route>
-
-            {/* Protected Vendor Portal Routes */}
-            <Route
-              path="/vendor"
-              element={
-                <ProtectedRoute>
-                  <VendorLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<VendorDashboardView />} />
-              <Route path="products" element={<VendorProductsView />} />
-              <Route path="products/new" element={<VendorProductEditView />} />
-              <Route path="orders" element={<VendorOrdersView />} />
-              <Route path="wallet" element={<VendorWalletView />} />
-              <Route path="settings" element={<VendorSettingsView />} />
-            </Route>
-
-            {/* Super Admin Portal Routes */}
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute allowedRoles={['admin']}>
-                  <AdminPortalLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<AdminDashboardView />} />
-              <Route path="vendors" element={<AdminVendorsView />} />
-              <Route path="products" element={<AdminProductsView />} />
-              <Route path="payouts" element={<AdminPayoutsView />} />
-              <Route path="settings" element={<AdminSettingsView />} />
-            </Route>
-
-            {/* Fallback route */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* Fallback & Root Redirects */}
+            <Route path="/" element={<RootRedirect />} />
+            <Route path="*" element={<RootRedirect />} />
           </Routes>
         </Suspense>
       </BrowserRouter>
@@ -127,3 +162,4 @@ export function App() {
 }
 
 export default App;
+

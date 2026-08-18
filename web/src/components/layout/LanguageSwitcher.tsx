@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Globe, ChevronDown, Check } from 'lucide-react';
 import { supportedLanguages } from '../../i18n';
@@ -9,11 +10,13 @@ interface LanguageSwitcherProps {
 
 export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ variant = 'navbar' }) => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Normalize language code (e.g. 'en-US' -> 'en')
-  const currentLngCode = (i18n.resolvedLanguage || i18n.language || 'vi').split('-')[0];
+  const currentLngCode = (i18n.resolvedLanguage || i18n.language || 'en').split('-')[0];
   const currentLanguage =
     supportedLanguages.find((l) => l.code === currentLngCode) || supportedLanguages[0];
 
@@ -29,6 +32,13 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ variant = 'n
 
   const handleLanguageChange = (code: string) => {
     i18n.changeLanguage(code);
+    const segments = location.pathname.split('/');
+    if (segments[1] && supportedLanguages.some((l) => l.code === segments[1])) {
+      segments[1] = code;
+      navigate(segments.join('/') + location.search + location.hash);
+    } else {
+      navigate(`/${code}${location.pathname}${location.search}${location.hash}`);
+    }
     setIsOpen(false);
   };
 
