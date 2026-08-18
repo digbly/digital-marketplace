@@ -24,6 +24,7 @@ import {
 } from '../../store/services/vendorApi';
 import { useAppSelector } from '../../store/hooks';
 import { useLogoutMutation } from '../../store/services/authApi';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export const VendorLayout: React.FC = () => {
   const location = useLocation();
@@ -277,6 +278,8 @@ export const VendorLayout: React.FC = () => {
 
           {/* Quick Header Actions */}
           <div className="flex items-center gap-3">
+            <LanguageSwitcher variant="compact" />
+
             <Link
               to="/vendor/products/new"
               className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-md shadow-purple-600/20 transition"

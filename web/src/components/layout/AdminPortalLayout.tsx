@@ -20,6 +20,7 @@ import {
 import { useAppSelector } from '../../store/hooks';
 import { useLogoutMutation } from '../../store/services/authApi';
 import type { AuthUser } from '../../types/auth';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 type NavItem = {
   label: string;
@@ -233,6 +234,8 @@ export const AdminPortalLayout: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            <LanguageSwitcher variant="compact" />
+
             <button className="relative p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
               <Bell className="w-5 h-5" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-500 rounded-full" />

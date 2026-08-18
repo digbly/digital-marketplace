@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Sparkles,
   ArrowRight,
@@ -104,6 +105,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({
 };
 
 export const HomeView: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { setSelectedCategory } = useMarketplaceStore();
 
@@ -139,18 +141,15 @@ export const HomeView: React.FC = () => {
         <div className="max-w-4xl mx-auto text-center space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold">
             <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Next-Gen Multi-Vendor Digital Marketplace</span>
+            <span>{t('nav.tagline')}</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            Premium Digital Assets,{' '}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400">
-              Built for Modern Makers.
-            </span>
+            {t('storefront.heroTitle')}
           </h1>
 
           <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
-            Discover verified SaaS boilerplates, UI kits, code scripts, and software license keys from elite independent creators worldwide.
+            {t('storefront.heroSubtitle')}
           </p>
 
           {/* Compact Call to Actions */}
@@ -159,14 +158,14 @@ export const HomeView: React.FC = () => {
               to="/browse"
               className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-indigo-600/30 flex items-center gap-2 transition"
             >
-              <span>Explore Marketplace</span>
+              <span>{t('nav.browseAssets')}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
             <Link
               to="/vendor"
               className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-xs sm:text-sm transition"
             >
-              Start Selling
+              {t('nav.vendorPortal')}
             </Link>
           </div>
         </div>
@@ -183,7 +182,7 @@ export const HomeView: React.FC = () => {
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-indigo-600/20 border border-indigo-500/40 text-indigo-300 hover:bg-indigo-600/30 transition shrink-0 cursor-pointer"
           >
             <LayoutGrid className="w-3.5 h-3.5" />
-            <span>All Categories</span>
+            <span>{t('common.all')} {t('nav.categories')}</span>
           </button>
 
           {isCategoriesLoading ? (
@@ -224,8 +223,8 @@ export const HomeView: React.FC = () => {
       {/* SECTION 1: Featured & Trending Products (Now Immediately Above the Fold!) */}
       <ProductSection
         icon={<TrendingUp className="w-3.5 h-3.5" />}
-        tagline="Trending Now"
-        title="Featured Digital Assets"
+        tagline={t('nav.trending')}
+        title={t('storefront.featuredProducts')}
         description="Hand-picked and verified premium digital products from top makers."
         viewAllLink="/browse"
         products={featuredProducts}
@@ -237,8 +236,8 @@ export const HomeView: React.FC = () => {
       {/* SECTION 2: New Arrivals / Fresh Releases */}
       <ProductSection
         icon={<Clock className="w-3.5 h-3.5" />}
-        tagline="Fresh Releases"
-        title="Newly Added Products"
+        tagline={t('storefront.sortNewest')}
+        title={t('storefront.recentlyAdded')}
         description="The latest digital creations, scripts, templates, and boilerplates published this week."
         viewAllLink="/browse?sort_by=newest"
         products={newestProducts}
@@ -250,7 +249,7 @@ export const HomeView: React.FC = () => {
       {/* SECTION 3: Best Sellers & Top Rated */}
       <ProductSection
         icon={<Flame className="w-3.5 h-3.5 text-amber-400" />}
-        tagline="Best Sellers"
+        tagline={t('storefront.sortPopular')}
         title="Community Favorites & Top Rated"
         description="The most downloaded and highest-rated assets loved by developers and designers."
         viewAllLink="/browse?sort_by=popular"

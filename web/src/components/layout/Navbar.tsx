@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   ShoppingBag,
   Store,
@@ -22,8 +23,10 @@ import { useAppSelector } from '../../store/hooks';
 import { useLogoutMutation } from '../../store/services/authApi';
 import { useGetCategoriesQuery } from '../../store/services/storefrontApi';
 import type { UserRole } from '../../types/marketplace';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export const Navbar: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { isAuthenticated, user: authUser } = useAppSelector((state) => state.auth);
   const [logout] = useLogoutMutation();
@@ -81,47 +84,53 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 text-white">
-      {/* Top utility banner for quick portal switching */}
+      {/* Top utility banner for quick portal switching & language */}
       <div className="bg-gradient-to-r from-indigo-900/50 via-purple-900/50 to-slate-900 px-4 py-1.5 text-xs text-slate-300 border-b border-slate-800/60 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="font-medium text-slate-200">Digital Asset Multi-Vendor Marketplace</span>
+          <span className="font-medium text-slate-200">{t('nav.tagline')}</span>
           <span className="hidden sm:inline text-slate-500">•</span>
-          <span className="hidden sm:inline text-slate-400">Instant Download & License Key Activation</span>
+          <span className="hidden sm:inline text-slate-400">{t('nav.subTagline')}</span>
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="text-slate-400 text-xs hidden md:inline">Switch Perspective:</span>
-          <div className="flex bg-slate-800/80 rounded-lg p-0.5 border border-slate-700">
-            <button
-              onClick={() => handleRoleSwitch('customer')}
-              className={`px-2.5 py-0.5 rounded text-xs font-medium transition-all ${
-                activeRole === 'customer'
-                  ? 'bg-indigo-600 text-white shadow'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              🛍️ Storefront
-            </button>
-            <button
-              onClick={() => handleRoleSwitch('vendor')}
-              className={`px-2.5 py-0.5 rounded text-xs font-medium transition-all ${
-                activeRole === 'vendor'
-                  ? 'bg-purple-600 text-white shadow'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              💼 Vendor Portal
-            </button>
-            <button
-              onClick={() => handleRoleSwitch('admin')}
-              className={`px-2.5 py-0.5 rounded text-xs font-medium transition-all ${
-                activeRole === 'admin'
-                  ? 'bg-amber-600 text-white shadow'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              ⚡ Super Admin
-            </button>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            <span className="text-slate-400 text-xs hidden md:inline">{t('nav.switchPerspective')}</span>
+            <div className="flex bg-slate-800/80 rounded-lg p-0.5 border border-slate-700">
+              <button
+                onClick={() => handleRoleSwitch('customer')}
+                className={`px-2.5 py-0.5 rounded text-xs font-medium transition-all ${
+                  activeRole === 'customer'
+                    ? 'bg-indigo-600 text-white shadow'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                🛍️ {t('nav.roles.customer')}
+              </button>
+              <button
+                onClick={() => handleRoleSwitch('vendor')}
+                className={`px-2.5 py-0.5 rounded text-xs font-medium transition-all ${
+                  activeRole === 'vendor'
+                    ? 'bg-purple-600 text-white shadow'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                💼 {t('nav.roles.vendor')}
+              </button>
+              <button
+                onClick={() => handleRoleSwitch('admin')}
+                className={`px-2.5 py-0.5 rounded text-xs font-medium transition-all ${
+                  activeRole === 'admin'
+                    ? 'bg-amber-600 text-white shadow'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                ⚡ {t('nav.roles.admin')}
+              </button>
+            </div>
+          </div>
+
+          <div className="hidden sm:block">
+            <LanguageSwitcher variant="compact" />
           </div>
         </div>
       </div>
@@ -150,7 +159,7 @@ export const Navbar: React.FC = () => {
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition"
           >
             <Sparkles className="w-4 h-4 text-indigo-400" />
-            <span>Categories</span>
+            <span>{t('nav.categories')}</span>
             <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${isCategoryOpen ? 'rotate-180' : ''}`} />
           </button>
 
@@ -164,7 +173,7 @@ export const Navbar: React.FC = () => {
                 }}
                 className="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-white font-medium"
               >
-                All Digital Categories
+                {t('common.all')} {t('nav.categories')}
               </button>
               <div className="h-px bg-slate-800 my-1" />
               {categories.map((cat) => (
@@ -188,7 +197,7 @@ export const Navbar: React.FC = () => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search templates, UI kits, boilerplates, software licenses..."
+              placeholder={t('common.searchPlaceholder')}
               className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-800/80 border border-slate-700/80 text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
             />
           </div>
@@ -196,13 +205,18 @@ export const Navbar: React.FC = () => {
 
         {/* Right Action Icons */}
         <div className="flex items-center gap-3">
+          {/* Language Switcher for mobile/header */}
+          <div className="sm:hidden">
+            <LanguageSwitcher variant="compact" />
+          </div>
+
           {/* Buyer Library Link */}
           <Link
             to="/buyer/library"
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition"
           >
             <DownloadCloud className="w-4 h-4 text-emerald-400" />
-            <span className="hidden md:inline">My Purchases</span>
+            <span className="hidden md:inline">{t('nav.myPurchases')}</span>
           </Link>
 
           {/* Cart Icon & Dropdown */}
@@ -225,7 +239,9 @@ export const Navbar: React.FC = () => {
                 <div className="flex items-center justify-between pb-3 border-b border-slate-800">
                   <div className="flex items-center gap-2">
                     <ShoppingBag className="w-4 h-4 text-indigo-400" />
-                    <span className="font-semibold text-sm">Your Cart ({cart.length})</span>
+                    <span className="font-semibold text-sm">
+                      {t('cart.title')} ({cart.length})
+                    </span>
                   </div>
                   <button onClick={() => setIsCartOpen(false)} className="text-slate-400 hover:text-white">
                     <X className="w-4 h-4" />
@@ -234,13 +250,13 @@ export const Navbar: React.FC = () => {
 
                 {cart.length === 0 ? (
                   <div className="py-8 text-center text-slate-400">
-                    <p className="text-sm">Your cart is empty.</p>
+                    <p className="text-sm">{t('nav.cartEmpty')}</p>
                     <Link
                       to="/browse"
                       onClick={() => setIsCartOpen(false)}
                       className="mt-3 inline-block text-xs font-semibold text-indigo-400 hover:underline"
                     >
-                      Browse Digital Products →
+                      {t('nav.browseAssets')} →
                     </Link>
                   </div>
                 ) : (
@@ -260,6 +276,7 @@ export const Navbar: React.FC = () => {
                           <button
                             onClick={() => removeFromCart(item.product.id)}
                             className="text-slate-400 hover:text-rose-400 p-1"
+                            title={t('cart.removeItem')}
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -269,7 +286,7 @@ export const Navbar: React.FC = () => {
 
                     <div className="pt-3 mt-3 border-t border-slate-800">
                       <div className="flex items-center justify-between text-sm mb-3">
-                        <span className="text-slate-400">Total:</span>
+                        <span className="text-slate-400">{t('cart.total')}:</span>
                         <span className="text-lg font-bold text-white">${getCartTotal().toFixed(2)}</span>
                       </div>
                       <Link
@@ -277,7 +294,7 @@ export const Navbar: React.FC = () => {
                         onClick={() => setIsCartOpen(false)}
                         className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 transition"
                       >
-                        <span>Proceed to Checkout</span>
+                        <span>{t('cart.checkout')}</span>
                         <ArrowRight className="w-4 h-4" />
                       </Link>
                     </div>
@@ -299,10 +316,10 @@ export const Navbar: React.FC = () => {
                 </div>
                 <div className="hidden lg:block text-left">
                   <div className="text-xs font-semibold text-slate-200 truncate max-w-[120px]">
-                    {authUser?.name || 'My Account'}
+                    {authUser?.name || t('nav.profile')}
                   </div>
                   <div className="text-[10px] text-purple-400 uppercase tracking-wider font-bold">
-                    Vendor / User
+                    {authUser?.role || 'User'}
                   </div>
                 </div>
               </button>
@@ -320,7 +337,7 @@ export const Navbar: React.FC = () => {
                       className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
                     >
                       <DownloadCloud className="w-4 h-4 text-emerald-400" />
-                      My Digital Library
+                      {t('nav.myPurchases')}
                     </Link>
                     <Link
                       to="/vendor"
@@ -331,7 +348,7 @@ export const Navbar: React.FC = () => {
                       className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
                     >
                       <Store className="w-4 h-4 text-purple-400" />
-                      Vendor Dashboard
+                      {t('nav.vendorPortal')}
                     </Link>
                     <Link
                       to="/admin"
@@ -342,14 +359,14 @@ export const Navbar: React.FC = () => {
                       className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
                     >
                       <ShieldCheck className="w-4 h-4 text-amber-400" />
-                      Super Admin Portal
+                      {t('nav.adminPortal')}
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition"
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition cursor-pointer"
                     >
                       <LogOut className="w-4 h-4" />
-                      Sign Out
+                      {t('nav.logout')}
                     </button>
                   </div>
                 </div>
@@ -362,14 +379,14 @@ export const Navbar: React.FC = () => {
                 className="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-1.5"
               >
                 <LogIn className="w-4 h-4" />
-                <span>Sign In</span>
+                <span>{t('nav.login')}</span>
               </Link>
               <Link
                 to="/auth/register"
                 className="px-3.5 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition flex items-center gap-1.5"
               >
                 <UserPlus className="w-4 h-4" />
-                <span className="hidden sm:inline">Register</span>
+                <span className="hidden sm:inline">{t('nav.register')}</span>
               </Link>
             </div>
           )}
