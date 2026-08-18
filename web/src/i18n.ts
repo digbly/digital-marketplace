@@ -22,7 +22,7 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    fallbackLng: 'vi',
+    fallbackLng: 'en',
     supportedLngs: ['vi', 'en', 'ja', 'ko', 'zh'],
     backend: {
       loadPath: '/locales/{{lng}}.json',
