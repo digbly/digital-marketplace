@@ -1,12 +1,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-
-import vi from './locales/vi.json';
-import en from './locales/en.json';
-import ja from './locales/ja.json';
-import ko from './locales/ko.json';
-import zh from './locales/zh.json';
+import HttpBackend from 'i18next-http-backend';
 
 export interface LanguageOption {
   code: string;
@@ -22,21 +17,16 @@ export const supportedLanguages: LanguageOption[] = [
   { code: 'zh', label: '中文', flag: '🇨🇳' },
 ];
 
-export const resources = {
-  vi: { translation: vi },
-  en: { translation: en },
-  ja: { translation: ja },
-  ko: { translation: ko },
-  zh: { translation: zh },
-};
-
 i18n
+  .use(HttpBackend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    resources,
     fallbackLng: 'vi',
     supportedLngs: ['vi', 'en', 'ja', 'ko', 'zh'],
+    backend: {
+      loadPath: '/locales/{{lng}}.json',
+    },
     interpolation: {
       escapeValue: false,
     },
@@ -44,6 +34,9 @@ i18n
       order: ['localStorage', 'navigator'],
       lookupLocalStorage: 'i18nextLng',
       caches: ['localStorage'],
+    },
+    react: {
+      useSuspense: false,
     },
   });
 
