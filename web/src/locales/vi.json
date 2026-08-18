@@ -77,7 +77,45 @@
     "sortNewest": "Mới nhất",
     "sortPriceLow": "Giá tăng dần",
     "sortPriceHigh": "Giá giảm dần",
-    "sortPopular": "Phổ biến nhất"
+    "sortPopular": "Phổ biến nhất",
+    "allCategories": "Tất cả danh mục",
+    "noProductsFound": "Không tìm thấy sản phẩm nào"
+  },
+  "vendor": {
+    "hub": "Vendor Hub",
+    "managementPortal": "Cổng Quản Lý Người Bán",
+    "onlineActive": "Trực tuyến & Hoạt động",
+    "availableBalance": "Số dư khả dụng",
+    "withdraw": "Rút tiền",
+    "holdingEscrow": "Đang giữ ký quỹ",
+    "viewStorefront": "Xem Cửa hàng Công khai",
+    "uploadAsset": "Tải lên tài sản",
+    "marketplace": "Sàn giao dịch",
+    "nav": {
+      "overview": "Tổng quan",
+      "catalogOrders": "Danh mục & Đơn hàng",
+      "productsCatalog": "Danh mục sản phẩm",
+      "ordersSales": "Đơn hàng & Doanh số",
+      "financeSettings": "Tài chính & Cài đặt",
+      "earningsWallet": "Thu nhập & Ví",
+      "storeSettings": "Cài đặt cửa hàng"
+    }
+  },
+  "admin": {
+    "panel": "Admin Panel",
+    "controlCenter": "Trung tâm Điều khiển Hệ thống",
+    "platformAdmin": "Quản trị viên Nền tảng",
+    "backToStorefront": "Về trang Cửa hàng",
+    "nav": {
+      "overview": "Tổng quan",
+      "dashboard": "Bảng điều khiển",
+      "management": "Quản lý",
+      "vendorApprovals": "Phê duyệt người bán",
+      "productModeration": "Kiểm duyệt sản phẩm",
+      "payoutRequests": "Yêu cầu rút tiền",
+      "configuration": "Cấu hình",
+      "platformSettings": "Cài đặt nền tảng"
+    }
   },
   "cart": {
     "title": "Giỏ hàng của bạn",
@@ -104,7 +142,8 @@
     "dontHaveAccount": "Chưa có tài khoản?",
     "alreadyHaveAccount": "Đã có tài khoản?",
     "loginButton": "Đăng nhập",
-    "registerButton": "Đăng ký"
+    "registerButton": "Đăng ký",
+    "backToStorefront": "Quay lại Cửa hàng"
   },
   "footer": {
     "about": "Về chúng tôi",

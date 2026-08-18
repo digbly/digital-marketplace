@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   LayoutDashboard,
   Package,
@@ -27,6 +28,7 @@ import { useLogoutMutation } from '../../store/services/authApi';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
 export const VendorLayout: React.FC = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
@@ -43,24 +45,24 @@ export const VendorLayout: React.FC = () => {
 
   const navGroups = [
     {
-      group: 'Overview',
+      group: t('vendor.nav.overview'),
       items: [
-        { label: 'Overview', to: '/vendor', icon: LayoutDashboard, end: true },
+        { label: t('vendor.nav.overview'), to: '/vendor', icon: LayoutDashboard, end: true },
       ],
     },
     {
-      group: 'Catalog & Orders',
+      group: t('vendor.nav.catalogOrders'),
       items: [
-        { label: 'Products Catalog', to: '/vendor/products', icon: Package, end: true },
-        { label: 'Upload Asset', to: '/vendor/products/new', icon: PlusCircle },
-        { label: 'Orders & Sales', to: '/vendor/orders', icon: ShoppingBag },
+        { label: t('vendor.nav.productsCatalog'), to: '/vendor/products', icon: Package, end: true },
+        { label: t('vendor.uploadAsset'), to: '/vendor/products/new', icon: PlusCircle },
+        { label: t('vendor.nav.ordersSales'), to: '/vendor/orders', icon: ShoppingBag },
       ],
     },
     {
-      group: 'Finance & Settings',
+      group: t('vendor.nav.financeSettings'),
       items: [
-        { label: 'Earnings & Wallet', to: '/vendor/wallet', icon: Wallet },
-        { label: 'Store Settings', to: '/vendor/settings', icon: Settings },
+        { label: t('vendor.nav.earningsWallet'), to: '/vendor/wallet', icon: Wallet },
+        { label: t('vendor.nav.storeSettings'), to: '/vendor/settings', icon: Settings },
       ],
     },
   ];
@@ -83,13 +85,13 @@ export const VendorLayout: React.FC = () => {
   // Determine current page name for header breadcrumb
   const getCurrentPageTitle = () => {
     const path = location.pathname;
-    if (path === '/vendor') return 'Overview';
-    if (path === '/vendor/products') return 'Products Catalog';
-    if (path === '/vendor/products/new') return 'Upload Asset';
-    if (path === '/vendor/orders') return 'Orders & Sales';
-    if (path === '/vendor/wallet') return 'Earnings & Wallet';
-    if (path === '/vendor/settings') return 'Store Settings';
-    return 'Dashboard';
+    if (path === '/vendor') return t('vendor.nav.overview');
+    if (path === '/vendor/products') return t('vendor.nav.productsCatalog');
+    if (path === '/vendor/products/new') return t('vendor.uploadAsset');
+    if (path === '/vendor/orders') return t('vendor.nav.ordersSales');
+    if (path === '/vendor/wallet') return t('vendor.nav.earningsWallet');
+    if (path === '/vendor/settings') return t('vendor.nav.storeSettings');
+    return t('vendor.nav.overview');
   };
 
   const renderSidebarContent = () => (
@@ -102,12 +104,12 @@ export const VendorLayout: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-base text-white tracking-tight">Vendor Hub</span>
+              <span className="font-extrabold text-base text-white tracking-tight">{t('vendor.hub')}</span>
               <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
                 PRO
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 font-medium">Seller Management Portal</p>
+            <p className="text-[11px] text-slate-400 font-medium">{t('vendor.managementPortal')}</p>
           </div>
         </Link>
         {isMobileMenuOpen && (
@@ -136,11 +138,11 @@ export const VendorLayout: React.FC = () => {
         </div>
         <div className="min-w-0 flex-1">
           <div className="text-xs font-bold text-white truncate">
-            {isProfileLoading ? 'Loading...' : vendor?.store_name || 'My Digital Store'}
+            {isProfileLoading ? t('common.loading') : vendor?.store_name || 'My Digital Store'}
           </div>
           <div className="flex items-center gap-1.5 mt-0.5">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[11px] text-slate-400 truncate">Online & Active</span>
+            <span className="text-[11px] text-slate-400 truncate">{t('vendor.onlineActive')}</span>
           </div>
         </div>
       </div>
@@ -185,14 +187,14 @@ export const VendorLayout: React.FC = () => {
           <div className="p-4 rounded-xl bg-gradient-to-b from-slate-800/80 to-slate-900 border border-slate-700/60 space-y-2.5">
             <div className="flex items-center justify-between text-slate-400">
               <span className="text-[11px] font-medium flex items-center gap-1">
-                <DollarSign className="w-3.5 h-3.5 text-purple-400" /> Available Balance
+                <DollarSign className="w-3.5 h-3.5 text-purple-400" /> {t('vendor.availableBalance')}
               </span>
               <Link
                 to="/vendor/wallet"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-[10px] font-bold text-purple-400 hover:text-purple-300 hover:underline"
               >
-                Withdraw
+                {t('vendor.withdraw')}
               </Link>
             </div>
             <div className="text-xl font-extrabold text-white">
@@ -203,7 +205,7 @@ export const VendorLayout: React.FC = () => {
               )}
             </div>
             <div className="flex items-center justify-between text-[11px] pt-2 border-t border-slate-700/60 text-slate-400">
-              <span>Holding in Escrow:</span>
+              <span>{t('vendor.holdingEscrow')}:</span>
               <span className="text-amber-400 font-semibold">
                 ${(wallet?.holding_balance || 0).toFixed(2)}
               </span>
@@ -220,16 +222,16 @@ export const VendorLayout: React.FC = () => {
         >
           <div className="flex items-center gap-2.5">
             <Globe className="w-4 h-4 text-indigo-400" />
-            <span>View Public Storefront</span>
+            <span>{t('vendor.viewStorefront')}</span>
           </div>
           <ArrowUpRight className="w-3.5 h-3.5" />
         </Link>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition"
+          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition cursor-pointer"
         >
           <LogOut className="w-4 h-4" />
-          <span>Log Out</span>
+          <span>{t('nav.logout')}</span>
         </button>
       </div>
     </div>
@@ -249,28 +251,28 @@ export const VendorLayout: React.FC = () => {
             className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
             onClick={() => setIsMobileMenuOpen(false)}
           />
-          <div className="relative flex-1 flex flex-col max-w-xs w-full bg-slate-900 shadow-2xl z-50">
+          <aside className="relative flex-1 flex flex-col max-w-xs w-full">
             {renderSidebarContent()}
-          </div>
+          </aside>
         </div>
       )}
 
-      {/* Main Admin Content Wrapper */}
+      {/* Main Layout Area */}
       <div className="flex-1 md:pl-64 flex flex-col min-w-0">
-        {/* Top Management Header Bar */}
-        <header className="sticky top-0 z-20 h-16 bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        {/* Sticky Header Topbar */}
+        <header className="sticky top-0 z-20 h-16 bg-slate-900/80 backdrop-blur-md border-b border-slate-800/80 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+          <div className="flex items-center gap-4">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="md:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none"
-              aria-label="Toggle Navigation Menu"
+              className="md:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"
+              aria-label="Open navigation"
             >
               <Menu className="w-5 h-5" />
             </button>
 
             {/* Breadcrumb Context */}
             <div className="flex items-center gap-2 text-xs">
-              <span className="text-slate-400 font-medium">Vendor Portal</span>
+              <span className="text-slate-400 font-medium">{t('nav.vendorPortal')}</span>
               <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
               <span className="text-white font-bold">{getCurrentPageTitle()}</span>
             </div>
@@ -285,7 +287,7 @@ export const VendorLayout: React.FC = () => {
               className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-md shadow-purple-600/20 transition"
             >
               <PlusCircle className="w-3.5 h-3.5" />
-              <span>Upload Asset</span>
+              <span>{t('vendor.uploadAsset')}</span>
             </Link>
 
             <Link
@@ -293,7 +295,7 @@ export const VendorLayout: React.FC = () => {
               className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-xs border border-slate-700 transition"
             >
               <ArrowUpRight className="w-3.5 h-3.5" />
-              <span>Marketplace</span>
+              <span>{t('vendor.marketplace')}</span>
             </Link>
 
             {/* User Profile Dropdown */}
@@ -342,7 +344,7 @@ export const VendorLayout: React.FC = () => {
                         className="flex items-center gap-2 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition"
                       >
                         <Settings className="w-4 h-4" />
-                        <span>Store Settings</span>
+                        <span>{t('vendor.nav.storeSettings')}</span>
                       </Link>
                       <Link
                         to="/vendor/wallet"
@@ -350,7 +352,7 @@ export const VendorLayout: React.FC = () => {
                         className="flex items-center gap-2 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition"
                       >
                         <Wallet className="w-4 h-4" />
-                        <span>Earnings & Wallet</span>
+                        <span>{t('vendor.nav.earningsWallet')}</span>
                       </Link>
                       <Link
                         to="/"
@@ -358,16 +360,16 @@ export const VendorLayout: React.FC = () => {
                         className="flex items-center gap-2 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition"
                       >
                         <Globe className="w-4 h-4" />
-                        <span>Public Storefront</span>
+                        <span>{t('vendor.viewStorefront')}</span>
                       </Link>
                     </div>
                     <div className="p-1 border-t border-slate-800">
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition"
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition cursor-pointer"
                       >
                         <LogOut className="w-4 h-4" />
-                        <span>Log Out</span>
+                        <span>{t('nav.logout')}</span>
                       </button>
                     </div>
                   </div>

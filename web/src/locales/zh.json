@@ -77,7 +77,45 @@
     "sortNewest": "最新",
     "sortPriceLow": "价格：从低到高",
     "sortPriceHigh": "价格：从高到低",
-    "sortPopular": "最受欢迎"
+    "sortPopular": "最受欢迎",
+    "allCategories": "全部分类",
+    "noProductsFound": "未找到产品"
+  },
+  "vendor": {
+    "hub": "Vendor Hub",
+    "managementPortal": "商家管理后台",
+    "onlineActive": "在线与活跃",
+    "availableBalance": "可用余额",
+    "withdraw": "提现",
+    "holdingEscrow": "托管中金额",
+    "viewStorefront": "查看公开店铺",
+    "uploadAsset": "上传资产",
+    "marketplace": "交易平台",
+    "nav": {
+      "overview": "概览",
+      "catalogOrders": "目录与订单",
+      "productsCatalog": "商品目录",
+      "ordersSales": "订单与销售",
+      "financeSettings": "财务与设置",
+      "earningsWallet": "收益与钱包",
+      "storeSettings": "店铺设置"
+    }
+  },
+  "admin": {
+    "panel": "Admin Panel",
+    "controlCenter": "平台控制中心",
+    "platformAdmin": "平台管理员",
+    "backToStorefront": "返回商铺",
+    "nav": {
+      "overview": "概览",
+      "dashboard": "仪表盘",
+      "management": "管理",
+      "vendorApprovals": "商家审核",
+      "productModeration": "商品审核",
+      "payoutRequests": "提现申请",
+      "configuration": "配置",
+      "platformSettings": "平台设置"
+    }
   },
   "cart": {
     "title": "您的购物车",
@@ -104,7 +142,8 @@
     "dontHaveAccount": "还没有账户？",
     "alreadyHaveAccount": "已有账户？",
     "loginButton": "登录",
-    "registerButton": "创建账户"
+    "registerButton": "创建账户",
+    "backToStorefront": "返回商铺"
   },
   "footer": {
     "about": "关于我们",

@@ -77,7 +77,45 @@
     "sortNewest": "最新順",
     "sortPriceLow": "価格の安い順",
     "sortPriceHigh": "価格の高い順",
-    "sortPopular": "人気順"
+    "sortPopular": "人気順",
+    "allCategories": "すべてのカテゴリー",
+    "noProductsFound": "商品が見つかりませんでした"
+  },
+  "vendor": {
+    "hub": "Vendor Hub",
+    "managementPortal": "出品者管理ポータル",
+    "onlineActive": "オンライン＆アクティブ",
+    "availableBalance": "利用可能残高",
+    "withdraw": "出金",
+    "holdingEscrow": "エスクロー保留中",
+    "viewStorefront": "ショップを表示",
+    "uploadAsset": "アセットを登録",
+    "marketplace": "マーケットプレイス",
+    "nav": {
+      "overview": "概要",
+      "catalogOrders": "カタログと注文",
+      "productsCatalog": "商品カタログ",
+      "ordersSales": "注文と売上",
+      "financeSettings": "財務と設定",
+      "earningsWallet": "収益とウォレット",
+      "storeSettings": "ショップ設定"
+    }
+  },
+  "admin": {
+    "panel": "Admin Panel",
+    "controlCenter": "プラットフォーム管理センター",
+    "platformAdmin": "プラットフォーム管理者",
+    "backToStorefront": "ストアフロントに戻る",
+    "nav": {
+      "overview": "概要",
+      "dashboard": "ダッシュボード",
+      "management": "管理",
+      "vendorApprovals": "出品者承認",
+      "productModeration": "商品モデレーション",
+      "payoutRequests": "出金申請",
+      "configuration": "設定",
+      "platformSettings": "プラットフォーム設定"
+    }
   },
   "cart": {
     "title": "ショッピングカート",
@@ -104,7 +142,8 @@
     "dontHaveAccount": "アカウントをお持ちでないですか？",
     "alreadyHaveAccount": "すでにアカウントをお持ちですか？",
     "loginButton": "サインイン",
-    "registerButton": "アカウント作成"
+    "registerButton": "アカウント作成",
+    "backToStorefront": "ストアフロントに戻る"
   },
   "footer": {
     "about": "当サイトについて",

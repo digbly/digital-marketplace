@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   LayoutDashboard,
   UserCheck,
@@ -19,7 +20,6 @@ import {
 
 import { useAppSelector } from '../../store/hooks';
 import { useLogoutMutation } from '../../store/services/authApi';
-import type { AuthUser } from '../../types/auth';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
 type NavItem = {
@@ -29,50 +29,73 @@ type NavItem = {
   end?: boolean;
 };
 
-const navGroups: { group: string; items: NavItem[] }[] = [
-  {
-    group: 'Overview',
-    items: [
-      { label: 'Dashboard', to: '/admin', icon: LayoutDashboard, end: true },
-    ],
-  },
-  {
-    group: 'Management',
-    items: [
-      { label: 'Vendor Approvals', to: '/admin/vendors', icon: UserCheck },
-      { label: 'Product Moderation', to: '/admin/products', icon: Package },
-      { label: 'Payout Requests', to: '/admin/payouts', icon: DollarSign },
-    ],
-  },
-  {
-    group: 'Configuration',
-    items: [
-      { label: 'Platform Settings', to: '/admin/settings', icon: Cog },
-    ],
-  },
-];
+export const AdminPortalLayout: React.FC = () => {
+  const { t } = useTranslation();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAppSelector((state) => state.auth);
+  const [logout] = useLogoutMutation();
 
-function getPageTitle(pathname: string): string {
-  for (const group of navGroups) {
-    for (const item of group.items) {
-      if ('end' in item && item.end ? pathname === item.to : pathname.startsWith(item.to)) {
-        return item.label;
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+
+  const navGroups: { group: string; items: NavItem[] }[] = [
+    {
+      group: t('admin.nav.overview'),
+      items: [
+        { label: t('admin.nav.dashboard'), to: '/admin', icon: LayoutDashboard, end: true },
+      ],
+    },
+    {
+      group: t('admin.nav.management'),
+      items: [
+        { label: t('admin.nav.vendorApprovals'), to: '/admin/vendors', icon: UserCheck },
+        { label: t('admin.nav.productModeration'), to: '/admin/products', icon: Package },
+        { label: t('admin.nav.payoutRequests'), to: '/admin/payouts', icon: DollarSign },
+      ],
+    },
+    {
+      group: t('admin.nav.configuration'),
+      items: [
+        { label: t('admin.nav.platformSettings'), to: '/admin/settings', icon: Cog },
+      ],
+    },
+  ];
+
+  const getPageTitle = (pathname: string): string => {
+    for (const group of navGroups) {
+      for (const item of group.items) {
+        if ('end' in item && item.end ? pathname === item.to : pathname.startsWith(item.to)) {
+          return item.label;
+        }
       }
     }
-  }
-  return 'Admin Portal';
-}
+    return t('admin.panel');
+  };
 
-const SidebarContent = React.memo(function SidebarContent({
-  user,
-  adminInitials,
-  onCloseMobile,
-}: {
-  user: AuthUser | null;
-  adminInitials: string;
-  onCloseMobile?: () => void;
-}) {
-  return (
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+    } catch {
+      // Intentionally silent — logout should always proceed
+    } finally {
+      setIsUserDropdownOpen(false);
+      navigate('/');
+    }
+  };
+
+  const adminInitials = user?.name
+    ? user.name
+        .split(' ')
+        .map((p) => p[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase()
+    : 'AD';
+
+  const pageTitle = getPageTitle(location.pathname);
+
+  const renderSidebarContent = (onCloseMobile?: () => void) => (
     <div className="flex flex-col h-full bg-slate-900 border-r border-slate-800/80">
       <div className="p-5 border-b border-slate-800/80 flex items-center justify-between">
         <Link to="/admin" className="flex items-center gap-3 group">
@@ -81,18 +104,18 @@ const SidebarContent = React.memo(function SidebarContent({
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-base text-white tracking-tight">Admin Panel</span>
+              <span className="font-extrabold text-base text-white tracking-tight">{t('admin.panel')}</span>
               <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
                 SUPER
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 font-medium">Platform Control Center</p>
+            <p className="text-[11px] text-slate-400 font-medium">{t('admin.controlCenter')}</p>
           </div>
         </Link>
         {onCloseMobile && (
           <button
             onClick={onCloseMobile}
-            className="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+            className="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
             aria-label="Close navigation"
           >
             <X className="w-5 h-5" />
@@ -107,7 +130,7 @@ const SidebarContent = React.memo(function SidebarContent({
           </div>
           <div className="min-w-0 flex-1">
             <div className="text-sm font-bold text-white truncate">{user?.name || 'Super Admin'}</div>
-            <div className="text-[11px] text-amber-400/80 font-medium">Platform Administrator</div>
+            <div className="text-[11px] text-amber-400/80 font-medium">{t('admin.platformAdmin')}</div>
           </div>
         </div>
       </div>
@@ -152,59 +175,30 @@ const SidebarContent = React.memo(function SidebarContent({
         >
           <div className="flex items-center gap-3">
             <Globe className="w-4 h-4" />
-            <span>Back to Storefront</span>
+            <span>{t('admin.backToStorefront')}</span>
           </div>
           <ArrowUpRight className="w-3.5 h-3.5" />
         </Link>
       </div>
     </div>
   );
-});
-
-export const AdminPortalLayout: React.FC = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { user } = useAppSelector((state) => state.auth);
-  const [logout] = useLogoutMutation();
-
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-
-  const handleLogout = async () => {
-    try {
-      await logout().unwrap();
-    } catch {
-      // Intentionally silent — logout should always proceed
-    } finally {
-      setIsUserDropdownOpen(false);
-      navigate('/');
-    }
-  };
-
-  const adminInitials = user?.name
-    ? user.name.slice(0, 2).toUpperCase()
-    : 'SA';
-
-  const pageTitle = getPageTitle(location.pathname);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex font-sans">
-      <aside className="hidden md:flex md:w-72 lg:w-72 flex-shrink-0 flex-col h-screen sticky top-0">
-        <SidebarContent user={user} adminInitials={adminInitials} />
+    <div className="flex h-screen bg-slate-950 text-slate-100 font-sans antialiased overflow-hidden">
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex w-72 flex-col flex-shrink-0 z-30">
+        {renderSidebarContent()}
       </aside>
 
+      {/* Mobile Drawer */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
+        <div className="fixed inset-0 z-50 md:hidden flex">
           <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
             onClick={() => setIsMobileMenuOpen(false)}
           />
-          <aside className="absolute inset-y-0 left-0 w-72 flex flex-col">
-            <SidebarContent
-              user={user}
-              adminInitials={adminInitials}
-              onCloseMobile={() => setIsMobileMenuOpen(false)}
-            />
+          <aside className="relative flex-1 flex flex-col max-w-xs w-full">
+            {renderSidebarContent(() => setIsMobileMenuOpen(false))}
           </aside>
         </div>
       )}
@@ -214,7 +208,7 @@ export const AdminPortalLayout: React.FC = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+              className="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
               aria-label="Open navigation"
             >
               <Menu className="w-5 h-5" />
@@ -222,7 +216,7 @@ export const AdminPortalLayout: React.FC = () => {
 
             <div className="flex items-center gap-2 text-sm">
               <Link to="/admin" className="text-slate-500 hover:text-slate-300 transition font-medium">
-                Admin
+                {t('nav.roles.admin')}
               </Link>
               {location.pathname !== '/admin' && (
                 <>
@@ -244,14 +238,14 @@ export const AdminPortalLayout: React.FC = () => {
             <div className="relative">
               <button
                 onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                className="flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-xl hover:bg-slate-800/80 transition group"
+                className="flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-xl hover:bg-slate-800/80 transition group cursor-pointer"
               >
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white text-xs font-bold shadow-md shadow-amber-500/20">
                   {adminInitials}
                 </div>
                 <div className="hidden sm:block text-left">
                   <div className="text-xs font-bold text-white leading-tight">{user?.name || 'Super Admin'}</div>
-                  <div className="text-[10px] text-slate-400 font-medium">Administrator</div>
+                  <div className="text-[10px] text-slate-400 font-medium">{t('admin.platformAdmin')}</div>
                 </div>
                 <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${isUserDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
@@ -273,7 +267,7 @@ export const AdminPortalLayout: React.FC = () => {
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-slate-700/60 transition"
                     >
                       <Cog className="w-4 h-4" />
-                      Platform Settings
+                      {t('admin.nav.platformSettings')}
                     </Link>
                     <Link
                       to="/"
@@ -281,15 +275,15 @@ export const AdminPortalLayout: React.FC = () => {
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-slate-700/60 transition"
                     >
                       <Globe className="w-4 h-4" />
-                      View Storefront
+                      {t('admin.backToStorefront')}
                     </Link>
                     <div className="border-t border-slate-700/60 mt-1 pt-1">
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition"
+                        className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition cursor-pointer"
                       >
                         <LogOut className="w-4 h-4" />
-                        Sign Out
+                        {t('nav.logout')}
                       </button>
                     </div>
                   </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Star, Layers, ArrowRight, ShoppingCart, Check } from 'lucide-react';
 import { useMarketplaceStore } from '../../store/marketplaceStore';
 import type { Product } from '../../types/marketplace';
@@ -10,6 +11,7 @@ export interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, compact = false }) => {
+  const { t } = useTranslation();
   const { addToCart } = useMarketplaceStore();
   const [isAdded, setIsAdded] = useState(false);
 
@@ -24,7 +26,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, compact = fal
   const getProductTypeLabel = (type: string) => {
     switch (type) {
       case 'downloadable_file':
-        return 'Downloadable';
+        return t('storefront.instantDownload');
       case 'license_key':
         return 'License Key';
       case 'bundle':
@@ -109,7 +111,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, compact = fal
       {/* Footer Price & Action */}
       <div className="p-4 sm:p-5 pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2 bg-slate-950/20">
         <div>
-          <div className="text-[9px] uppercase tracking-wider text-slate-500 font-semibold">Price</div>
+          <div className="text-[9px] uppercase tracking-wider text-slate-500 font-semibold">{t('common.price')}</div>
           <div className="flex items-baseline gap-1.5">
             <span className="text-base sm:text-lg font-extrabold text-white">
               ${(product.effective_price ?? product.price ?? 0).toFixed(2)}
@@ -130,24 +132,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, compact = fal
                 ? 'bg-emerald-600 text-white shadow-emerald-600/20'
                 : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/20 hover:scale-[1.02]'
             }`}
-            title="Add to shopping cart"
+            title={t('storefront.addToCart')}
           >
             {isAdded ? (
               <>
                 <Check className="w-3.5 h-3.5" />
-                <span>Added</span>
+                <span>✓</span>
               </>
             ) : (
               <>
                 <ShoppingCart className="w-3.5 h-3.5" />
-                <span>Add</span>
+                <span>{t('storefront.addToCart')}</span>
               </>
             )}
           </button>
           <Link
             to={`/products/${product.slug}`}
             className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition"
-            title="View Details"
+            title={t('common.view')}
           >
             <ArrowRight className="w-4 h-4" />
           </Link>

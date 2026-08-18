@@ -35,7 +35,7 @@
     "myPurchases": "구매한 에셋",
     "vendorPortal": "판매자 포털",
     "adminPortal": "관리자 포털",
-    "cart": "장바구내",
+    "cart": "장바구니",
     "cartEmpty": "장바구니가 비어 있습니다",
     "cartEmptyDesc": "수천 개의 프리미엄 디지털 에셋을 둘러보세요",
     "browseAssets": "에셋 둘러보기",
@@ -77,7 +77,45 @@
     "sortNewest": "최신순",
     "sortPriceLow": "낮은 가격순",
     "sortPriceHigh": "높은 가격순",
-    "sortPopular": "인기순"
+    "sortPopular": "인기순",
+    "allCategories": "전체 카테고리",
+    "noProductsFound": "등록된 상품이 없습니다"
+  },
+  "vendor": {
+    "hub": "Vendor Hub",
+    "managementPortal": "판매자 관리 포털",
+    "onlineActive": "온라인 및 활성",
+    "availableBalance": "출금 가능 잔액",
+    "withdraw": "출금하기",
+    "holdingEscrow": "에스크로 보관 중",
+    "viewStorefront": "공개 스토어 보기",
+    "uploadAsset": "에셋 등록",
+    "marketplace": "마켓플레이스",
+    "nav": {
+      "overview": "개요",
+      "catalogOrders": "카탈로그 및 주문",
+      "productsCatalog": "상품 카탈로그",
+      "ordersSales": "주문 및 매출",
+      "financeSettings": "정산 및 설정",
+      "earningsWallet": "수익 및 지갑",
+      "storeSettings": "스토어 설정"
+    }
+  },
+  "admin": {
+    "panel": "Admin Panel",
+    "controlCenter": "플랫폼 관리 센터",
+    "platformAdmin": "플랫폼 관리자",
+    "backToStorefront": "스토어프론트로 돌아가기",
+    "nav": {
+      "overview": "개요",
+      "dashboard": "대시보드",
+      "management": "관리",
+      "vendorApprovals": "판매자 승인",
+      "productModeration": "상품 검수",
+      "payoutRequests": "정산 요청",
+      "configuration": "설정",
+      "platformSettings": "플랫폼 설정"
+    }
   },
   "cart": {
     "title": "쇼핑 장바구니",
@@ -104,7 +142,8 @@
     "dontHaveAccount": "계정이 없으신가요?",
     "alreadyHaveAccount": "이미 계정이 있으신가요?",
     "loginButton": "로그인",
-    "registerButton": "계정 만들기"
+    "registerButton": "계정 만들기",
+    "backToStorefront": "스토어프론트로 돌아가기"
   },
   "footer": {
     "about": "회사 소개",

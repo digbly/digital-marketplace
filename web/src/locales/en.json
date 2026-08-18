@@ -77,7 +77,45 @@
     "sortNewest": "Newest",
     "sortPriceLow": "Price: Low to High",
     "sortPriceHigh": "Price: High to Low",
-    "sortPopular": "Most Popular"
+    "sortPopular": "Most Popular",
+    "allCategories": "All Categories",
+    "noProductsFound": "No products found"
+  },
+  "vendor": {
+    "hub": "Vendor Hub",
+    "managementPortal": "Seller Management Portal",
+    "onlineActive": "Online & Active",
+    "availableBalance": "Available Balance",
+    "withdraw": "Withdraw",
+    "holdingEscrow": "Holding in Escrow",
+    "viewStorefront": "View Public Storefront",
+    "uploadAsset": "Upload Asset",
+    "marketplace": "Marketplace",
+    "nav": {
+      "overview": "Overview",
+      "catalogOrders": "Catalog & Orders",
+      "productsCatalog": "Products Catalog",
+      "ordersSales": "Orders & Sales",
+      "financeSettings": "Finance & Settings",
+      "earningsWallet": "Earnings & Wallet",
+      "storeSettings": "Store Settings"
+    }
+  },
+  "admin": {
+    "panel": "Admin Panel",
+    "controlCenter": "Platform Control Center",
+    "platformAdmin": "Platform Administrator",
+    "backToStorefront": "Back to Storefront",
+    "nav": {
+      "overview": "Overview",
+      "dashboard": "Dashboard",
+      "management": "Management",
+      "vendorApprovals": "Vendor Approvals",
+      "productModeration": "Product Moderation",
+      "payoutRequests": "Payout Requests",
+      "configuration": "Configuration",
+      "platformSettings": "Platform Settings"
+    }
   },
   "cart": {
     "title": "Your Shopping Cart",
@@ -104,7 +142,8 @@
     "dontHaveAccount": "Don't have an account?",
     "alreadyHaveAccount": "Already have an account?",
     "loginButton": "Sign In",
-    "registerButton": "Create Account"
+    "registerButton": "Create Account",
+    "backToStorefront": "Back to Storefront"
   },
   "footer": {
     "about": "About Us",

@@ -1,9 +1,12 @@
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Layers, Sparkles, Sun, Moon, ArrowLeft, DownloadCloud, Key, ShieldCheck } from 'lucide-react';
 import { useTheme } from '../../context/useTheme';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export const AuthLayout: React.FC = () => {
+  const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
 
   return (
@@ -32,18 +35,20 @@ export const AuthLayout: React.FC = () => {
               </span>
             </div>
             <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              Digital Asset Multi-Vendor Marketplace
+              {t('nav.tagline')}
             </p>
           </div>
         </Link>
 
         <div className="flex items-center gap-3">
+          <LanguageSwitcher variant="compact" />
+
           <Link
             to="/"
             className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white px-3 py-2 rounded-xl hover:bg-slate-200/50 dark:hover:bg-white/[0.05] transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Storefront</span>
+            <span>{t('auth.backToStorefront')}</span>
           </Link>
 
           {/* Theme Toggle Button */}
