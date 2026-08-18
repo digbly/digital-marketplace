@@ -1,7 +1,6 @@
 .env
 .DS_Store
 .idea/
-.vscode/
 /.context
 api/vendor/
 api/.env
