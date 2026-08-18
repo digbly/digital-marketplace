@@ -1,6 +1,7 @@
 {
   "common": {
-    "appName": "Digital Marketplace",
+    "appName": "DigiStore PRO",
+    "marketplace": "Marketplace",
     "search": "Search",
     "searchPlaceholder": "Search UI kits, 3D assets, source code...",
     "cancel": "Cancel",
@@ -9,6 +10,7 @@
     "delete": "Delete",
     "edit": "Edit",
     "view": "View",
+    "viewAll": "View all",
     "loading": "Loading...",
     "error": "An error occurred",
     "success": "Success",
@@ -18,7 +20,14 @@
     "actions": "Actions",
     "price": "Price",
     "free": "Free",
-    "currency": "$"
+    "currency": "$",
+    "sale": "Sale",
+    "version": "Version",
+    "updated": "Updated",
+    "created": "Created",
+    "verifiedVendor": "Verified Vendor",
+    "page": "Page",
+    "of": "of"
   },
   "nav": {
     "tagline": "Digital Asset Multi-Vendor Marketplace",
@@ -30,6 +39,7 @@
       "admin": "Admin"
     },
     "categories": "Categories",
+    "allCategories": "All Categories",
     "explore": "Explore",
     "trending": "Trending",
     "myPurchases": "My Purchases",
@@ -49,6 +59,8 @@
     "settings": "Settings"
   },
   "languages": {
+    "selectLanguage": "Select Language",
+    "changeLanguage": "Change language",
     "vi": "Tiếng Việt",
     "en": "English",
     "ja": "日本語",
@@ -58,9 +70,14 @@
   "storefront": {
     "heroTitle": "Discover Premium Digital Assets for Your Next Project",
     "heroSubtitle": "Thousands of curated source codes, UI kits, 3D models, audio, and graphics from top creators worldwide.",
-    "featuredProducts": "Featured Products",
+    "featuredProducts": "Featured Digital Assets",
+    "featuredDescription": "Hand-picked and verified premium digital products from top makers.",
     "popularCategories": "Popular Categories",
-    "recentlyAdded": "Recently Added",
+    "recentlyAdded": "Newly Added Products",
+    "recentlyAddedDescription": "The latest digital creations, scripts, templates, and boilerplates published this week.",
+    "bestSellers": "Best Sellers",
+    "bestSellersTitle": "Community Favorites & Top Rated",
+    "bestSellersDescription": "The most downloaded and highest-rated assets loved by developers and designers.",
     "instantDownload": "Instant Download",
     "instantDownloadDesc": "Get secure download links and license activation keys immediately after checkout.",
     "buyerProtection": "Buyer Protection",
@@ -70,6 +87,7 @@
     "reviews": "Reviews",
     "sales": "Sales",
     "addToCart": "Add to Cart",
+    "added": "Added",
     "buyNow": "Buy Now",
     "preview": "Live Preview",
     "filter": "Filter",
@@ -78,8 +96,79 @@
     "sortPriceLow": "Price: Low to High",
     "sortPriceHigh": "Price: High to Low",
     "sortPopular": "Most Popular",
+    "sortRating": "Highest Rated",
     "allCategories": "All Categories",
-    "noProductsFound": "No products found"
+    "viewCatalog": "View catalog",
+    "noProductsFound": "No matching products found",
+    "noProductsDesc": "Try adjusting your search keywords or clearing filters."
+  },
+  "browse": {
+    "title": "Browse Digital Marketplace",
+    "subtitle": "Explore {{count}} verified digital assets ready for instant download",
+    "searchAssets": "Search Assets",
+    "keywords": "Keywords...",
+    "assetFormat": "Asset Format",
+    "allFormats": "All Formats",
+    "downloadableFiles": "Downloadable Files",
+    "softwareLicenses": "Software Licenses",
+    "bundles": "Bundles & Suites",
+    "categories": "Categories",
+    "clear": "Clear",
+    "minRating": "Minimum Rating",
+    "allRatings": "All Ratings",
+    "ratingAndUp": "{{rating}} & up",
+    "resetFilters": "Reset All Filters"
+  },
+  "cart": {
+    "title": "Your Shopping Cart",
+    "itemsCount": "{{count}} items",
+    "removeItem": "Remove",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "tax": "Estimated Tax",
+    "total": "Total Amount",
+    "checkout": "Proceed to Checkout",
+    "continueShopping": "Continue Shopping",
+    "emptyCartTitle": "Cart is empty",
+    "emptyCartMessage": "You have not added any products to your cart yet."
+  },
+  "checkout": {
+    "title": "Order Checkout",
+    "secureCheckout": "256-bit SSL Secure Checkout",
+    "orderSummary": "Order Summary",
+    "paymentMethod": "Payment Method",
+    "creditCard": "Credit / Debit Card",
+    "paypal": "PayPal",
+    "crypto": "Cryptocurrency (USDT, BTC, ETH)",
+    "momo": "MoMo Wallet / QR Code",
+    "promoCode": "Promo Code",
+    "apply": "Apply",
+    "payNow": "Confirm & Pay",
+    "processing": "Processing...",
+    "orderSuccess": "Order Completed Successfully!",
+    "orderSuccessDesc": "Thank you for your purchase. Your digital asset download and license keys are ready.",
+    "downloadLink": "Download Assets",
+    "licenseKey": "Your License Key",
+    "copyKey": "Copy Key",
+    "copied": "Copied!",
+    "goToLibrary": "Go to My Library"
+  },
+  "productDetail": {
+    "instantDelivery": "Instant Delivery",
+    "commercialLicense": "Commercial License",
+    "lifetimeUpdates": "Lifetime Updates",
+    "supportIncluded": "6 Months Creator Support",
+    "specifications": "Technical Specifications",
+    "filesIncluded": "Files Included",
+    "compatibleWith": "Compatible With",
+    "fileSize": "File Size",
+    "customerReviews": "Customer Reviews",
+    "noReviewsYet": "No reviews yet",
+    "beTheFirstReview": "Be the first to review this digital asset!",
+    "relatedProducts": "Related Products",
+    "vendorInfo": "Vendor Information",
+    "joined": "Joined",
+    "totalSales": "Sales"
   },
   "vendor": {
     "hub": "Vendor Hub",
@@ -117,16 +206,14 @@
       "platformSettings": "Platform Settings"
     }
   },
-  "cart": {
-    "title": "Your Shopping Cart",
-    "itemsCount": "{{count}} items",
-    "removeItem": "Remove",
-    "subtotal": "Subtotal",
-    "discount": "Discount",
-    "tax": "Estimated Tax",
-    "total": "Total Amount",
-    "checkout": "Proceed to Checkout",
-    "continueShopping": "Continue Shopping"
+  "buyer": {
+    "libraryTitle": "My Digital Library",
+    "librarySubtitle": "Unlimited access to all your purchased source codes, designs, and license keys",
+    "searchPurchases": "Search purchases...",
+    "download": "Download Now",
+    "viewKey": "View Key",
+    "noPurchasesTitle": "No purchases found",
+    "noPurchasesDesc": "Explore the marketplace to find high quality digital products for your projects."
   },
   "auth": {
     "loginTitle": "Welcome Back",
@@ -143,17 +230,38 @@
     "alreadyHaveAccount": "Already have an account?",
     "loginButton": "Sign In",
     "registerButton": "Create Account",
-    "backToStorefront": "Back to Storefront"
+    "backToStorefront": "Back to Storefront",
+    "premierPlatform": "Premier Digital Creator Platform",
+    "showcaseTitle": "Buy, Sell & License Premium Digital Assets.",
+    "showcaseSubtitle": "Explore verified source code boilerplates, UI templates, design systems, and software license keys with instant automated delivery.",
+    "encryptedDownloads": "Instant Encrypted Downloads & Tokenized Links",
+    "licensePools": "Automated License Key Pools & Quotas",
+    "secureEscrow": "Buyer Protection & Escrow Payouts"
   },
   "footer": {
     "about": "About Us",
-    "aboutDesc": "The leading digital asset marketplace for developers, designers, and content creators.",
-    "resources": "Resources",
+    "aboutDesc": "The premier multi-vendor marketplace for high quality digital assets, SaaS starter kits, design templates, and software licenses.",
+    "marketplace": "Marketplace",
+    "forCreators": "For Creators",
+    "becomeVendor": "Become a Vendor",
+    "vendorDashboard": "Vendor Dashboard",
+    "earningsPayouts": "Earnings & Payouts",
+    "submitAsset": "Submit New Asset",
+    "templatesThemes": "Templates & Themes",
+    "sourceCodeBoilerplates": "Source Code Boilerplates",
+    "softwareLicenses": "Software License Keys",
+    "trustSecurity": "Trust & Security",
+    "verifiedFiles": "Verified Clean Files & Antivirus Scanned",
+    "instantKeyGen": "Instant Download & Auto Key Generation",
+    "lifetimeAccess": "100% Lifetime Access Guarantee",
     "legal": "Legal",
     "terms": "Terms of Service",
     "privacy": "Privacy Policy",
     "license": "License Agreement",
     "support": "Support",
-    "allRightsReserved": "All rights reserved."
+    "allRightsReserved": "All rights reserved.",
+    "copyright": "© {{year}} DigiStore Multi-Vendor E-Commerce. All rights reserved.",
+    "engineeredWith": "Engineered with",
+    "forCreatorsAndDevs": "for Digital Creators & Developers"
   }
 }

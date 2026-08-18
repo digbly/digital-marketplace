@@ -1,7 +1,7 @@
 # Solution: Web i18n Multi-Language Support
 
 ## Overview
-Implemented full internationalization (i18n) for the React frontend (`web/`) supporting 5 languages: Vietnamese (`vi`), English (`en`), Japanese (`ja`), Korean (`ko`), and Chinese (`zh`).
+Implemented complete internationalization (i18n) for the React frontend (`web/`) supporting 5 languages: Vietnamese (`vi`), English (`en`), Japanese (`ja`), Korean (`ko`), and Chinese (`zh`).
 
 ## Architecture & Configuration
 1. **Libraries**: `i18next`, `react-i18next`, and `i18next-browser-languagedetector`.
@@ -14,9 +14,14 @@ Implemented full internationalization (i18n) for the React frontend (`web/`) sup
    - `web/src/locales/ja.json`
    - `web/src/locales/ko.json`
    - `web/src/locales/zh.json`
-4. **UI Components & Integration**:
-   - `web/src/components/layout/LanguageSwitcher.tsx`: Dropdown component supporting `compact` and `navbar` variants.
-   - Fully integrated with `useTranslation()` into `Navbar.tsx`, `VendorLayout.tsx`, `AdminPortalLayout.tsx`, `AuthLayout.tsx`, `StorefrontLayout.tsx`, `HomeView.tsx`, and `ProductCard.tsx`.
+4. **UI Components & Layouts Fully Translated**:
+   - `LanguageSwitcher.tsx`: Localized language selector headers and labels.
+   - `StorefrontLayout.tsx`: Footer columns, trust badges, copyright, and creator links.
+   - `Navbar.tsx`: Search, categories, perspective switcher, cart flyout, user profile menu.
+   - `BrowseProductsView.tsx`: Filter sidebar, asset format badges, rating filters, sort dropdown, and pagination.
+   - `ProductCard.tsx`: Price, actions, live preview, version/format badges.
+   - `VendorLayout.tsx` & `AdminPortalLayout.tsx`: Full navigation menus, headers, wallet widgets, and breadcrumbs.
+   - `AuthLayout.tsx`: Header, back link, tagline, and showcase features.
 
 ## Key Patterns
 - When creating new UI components, use `useTranslation()` from `react-i18next` and reference translation keys defined under `web/src/locales/*.json`.

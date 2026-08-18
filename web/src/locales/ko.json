@@ -1,6 +1,7 @@
 {
   "common": {
-    "appName": "Digital Marketplace",
+    "appName": "DigiStore PRO",
+    "marketplace": "마켓플레이스",
     "search": "검색",
     "searchPlaceholder": "UI 키트, 3D 에셋, 소스 코드 검색...",
     "cancel": "취소",
@@ -9,6 +10,7 @@
     "delete": "삭제",
     "edit": "수정",
     "view": "보기",
+    "viewAll": "전체 보기",
     "loading": "로딩 중...",
     "error": "오류가 발생했습니다",
     "success": "성공",
@@ -18,7 +20,14 @@
     "actions": "작업",
     "price": "가격",
     "free": "무료",
-    "currency": "₩"
+    "currency": "₩",
+    "sale": "할인",
+    "version": "버전",
+    "updated": "업데이트일",
+    "created": "생성일",
+    "verifiedVendor": "인증된 판매자",
+    "page": "페이지",
+    "of": "/"
   },
   "nav": {
     "tagline": "디지털 에셋 멀티벤더 마켓플레이스",
@@ -30,6 +39,7 @@
       "admin": "관리자"
     },
     "categories": "카테고리",
+    "allCategories": "전체 카테고리",
     "explore": "탐색",
     "trending": "인기",
     "myPurchases": "구매한 에셋",
@@ -49,6 +59,8 @@
     "settings": "설정"
   },
   "languages": {
+    "selectLanguage": "언어 선택",
+    "changeLanguage": "언어 변경",
     "vi": "Tiếng Việt",
     "en": "English",
     "ja": "日本語",
@@ -58,9 +70,14 @@
   "storefront": {
     "heroTitle": "다음 프로젝트를 위한 최고의 디지털 에셋을 만나보세요",
     "heroSubtitle": "전 세계 최고 크리에이터들의 엄선된 수천 개의 소스 코드, UI 키트, 3D 모델, 오디오 및 그래픽.",
-    "featuredProducts": "추천 상품",
+    "featuredProducts": "추천 디지털 에셋",
+    "featuredDescription": "최고의 제작자들로부터 엄선되고 검증된 프리미엄 디지털 제품.",
     "popularCategories": "인기 카테고리",
-    "recentlyAdded": "최신 등록",
+    "recentlyAdded": "최신 등록 상품",
+    "recentlyAddedDescription": "이번 주에 새로 출시된 최신 디지털 창작물, 스크립트 및 템플릿.",
+    "bestSellers": "베스트셀러",
+    "bestSellersTitle": "커뮤니티 인기 & 최고 평점",
+    "bestSellersDescription": "개발자와 디자이너에게 가장 사랑받고 많이 다운로드된 에셋.",
     "instantDownload": "즉시 다운로드",
     "instantDownloadDesc": "결제 즉시 안전한 다운로드 링크와 라이선스 키를 받으세요.",
     "buyerProtection": "구매자 보호",
@@ -70,6 +87,7 @@
     "reviews": "리뷰",
     "sales": "판매수",
     "addToCart": "장바구니 담기",
+    "added": "추가됨",
     "buyNow": "지금 구매",
     "preview": "미리보기",
     "filter": "필터",
@@ -78,8 +96,79 @@
     "sortPriceLow": "낮은 가격순",
     "sortPriceHigh": "높은 가격순",
     "sortPopular": "인기순",
+    "sortRating": "평점 높은순",
     "allCategories": "전체 카테고리",
-    "noProductsFound": "등록된 상품이 없습니다"
+    "viewCatalog": "카탈로그 전체 보기",
+    "noProductsFound": "일치하는 상품이 없습니다",
+    "noProductsDesc": "검색어를 변경하거나 필터를 초기화해 보세요."
+  },
+  "browse": {
+    "title": "디지털 마켓플레이스 둘러보기",
+    "subtitle": "즉시 다운로드 가능한 {{count}}개의 검증된 디지털 에셋 탐색",
+    "searchAssets": "에셋 검색",
+    "keywords": "키워드...",
+    "assetFormat": "에셋 형식",
+    "allFormats": "모든 형식",
+    "downloadableFiles": "다운로드 가능 파일",
+    "softwareLicenses": "소프트웨어 라이선스",
+    "bundles": "번들 및 패키지",
+    "categories": "카테고리",
+    "clear": "초기화",
+    "minRating": "최소 평점",
+    "allRatings": "모든 평점",
+    "ratingAndUp": "{{rating}}점 이상",
+    "resetFilters": "모든 필터 초기화"
+  },
+  "cart": {
+    "title": "쇼핑 장바구니",
+    "itemsCount": "{{count}}개 상품",
+    "removeItem": "삭제",
+    "subtotal": "소계",
+    "discount": "할인",
+    "tax": "예상 세금",
+    "total": "총 결제금액",
+    "checkout": "결제 진행하기",
+    "continueShopping": "쇼핑 계속하기",
+    "emptyCartTitle": "장바구니가 비어 있습니다",
+    "emptyCartMessage": "아직 장바구니에 담긴 상품이 없습니다."
+  },
+  "checkout": {
+    "title": "주문 결제",
+    "secureCheckout": "256비트 SSL 보안 결제",
+    "orderSummary": "주문 요약",
+    "paymentMethod": "결제 수단",
+    "creditCard": "신용카드 / 체크카드",
+    "paypal": "PayPal",
+    "crypto": "가상자산 (USDT, BTC, ETH)",
+    "momo": "QR 간편결제",
+    "promoCode": "프로모션 코드",
+    "apply": "적용",
+    "payNow": "주문 확인 및 결제",
+    "processing": "처리 중...",
+    "orderSuccess": "주문이 성공적으로 완료되었습니다!",
+    "orderSuccessDesc": "구매해 주셔서 감사합니다. 에셋 다운로드 링크와 라이선스 키가 준비되었습니다.",
+    "downloadLink": "에셋 다운로드",
+    "licenseKey": "라이선스 키",
+    "copyKey": "키 복사",
+    "copied": "복사 완료!",
+    "goToLibrary": "내 라이브러리로 이동"
+  },
+  "productDetail": {
+    "instantDelivery": "즉시 전달",
+    "commercialLicense": "상업용 라이선스",
+    "lifetimeUpdates": "평생 업데이트",
+    "supportIncluded": "제작자 6개월 지원",
+    "specifications": "기술 사양",
+    "filesIncluded": "포함된 파일",
+    "compatibleWith": "호환 환경",
+    "fileSize": "파일 크기",
+    "customerReviews": "구매자 리뷰",
+    "noReviewsYet": "등록된 리뷰가 없습니다",
+    "beTheFirstReview": "이 에셋의 첫 번째 리뷰를 남겨보세요!",
+    "relatedProducts": "관련 상품",
+    "vendorInfo": "판매자 정보",
+    "joined": "가입일",
+    "totalSales": "총 판매수"
   },
   "vendor": {
     "hub": "Vendor Hub",
@@ -117,16 +206,14 @@
       "platformSettings": "플랫폼 설정"
     }
   },
-  "cart": {
-    "title": "쇼핑 장바구니",
-    "itemsCount": "{{count}}개 상품",
-    "removeItem": "삭제",
-    "subtotal": "소계",
-    "discount": "할인",
-    "tax": "예상 세금",
-    "total": "총 결제금액",
-    "checkout": "결제 진행하기",
-    "continueShopping": "쇼핑 계속하기"
+  "buyer": {
+    "libraryTitle": "내 디지털 라이브러리",
+    "librarySubtitle": "구매한 모든 소스 코드, 디자인, 라이선스 키에 무제한 액세스",
+    "searchPurchases": "구매 내역 검색...",
+    "download": "지금 다운로드",
+    "viewKey": "키 보기",
+    "noPurchasesTitle": "구매한 상품이 없습니다",
+    "noPurchasesDesc": "마켓플레이스를 둘러보고 프로젝트에 필요한 프리미엄 상품을 찾아보세요."
   },
   "auth": {
     "loginTitle": "다시 오신 것을 환영합니다",
@@ -143,17 +230,38 @@
     "alreadyHaveAccount": "이미 계정이 있으신가요?",
     "loginButton": "로그인",
     "registerButton": "계정 만들기",
-    "backToStorefront": "스토어프론트로 돌아가기"
+    "backToStorefront": "스토어프론트로 돌아가기",
+    "premierPlatform": "최고의 디지털 크리에이터 플랫폼",
+    "showcaseTitle": "프리미엄 디지털 에셋 구매, 판매 및 라이선스.",
+    "showcaseSubtitle": "자동 전달되는 소스 코드 보일러플레이트, UI 템플릿, 디자인 시스템 및 라이선스 키 탐색.",
+    "encryptedDownloads": "즉시 암호화된 다운로드 및 보안 토큰 링크",
+    "licensePools": "자동 라이선스 키 풀 및 쿼터 관리",
+    "secureEscrow": "구매자 보호 및 안전한 에스크로 정산"
   },
   "footer": {
     "about": "회사 소개",
-    "aboutDesc": "개발자, 디자이너, 콘텐츠 크리에이터를 위한 선도적인 디지털 에셋 마켓플레이스.",
-    "resources": "리소스",
+    "aboutDesc": "고품질 디지털 에셋, SaaS 스타터 키트, 디자인 템플릿, 소프트웨어 라이선스를 위한 멀티벤더 마켓플레이스.",
+    "marketplace": "마켓플레이스",
+    "forCreators": "크리에이터 안내",
+    "becomeVendor": "판매자 등록하기",
+    "vendorDashboard": "판매자 대시보드",
+    "earningsPayouts": "수익 및 정산",
+    "submitAsset": "새 에셋 등록",
+    "templatesThemes": "템플릿 및 테마",
+    "sourceCodeBoilerplates": "소스 코드 보일러플레이트",
+    "softwareLicenses": "소프트웨어 라이선스 키",
+    "trustSecurity": "신뢰 및 보안",
+    "verifiedFiles": "100% 바이러스 검사 완료 클린 파일",
+    "instantKeyGen": "즉시 다운로드 및 자동 키 생성",
+    "lifetimeAccess": "100% 평생 이용 보장",
     "legal": "법적 고지",
     "terms": "이용약관",
     "privacy": "개인정보처리방침",
     "license": "라이선스 계약",
     "support": "고객지원",
-    "allRightsReserved": "모든 권리 보유."
+    "allRightsReserved": "모든 권리 보유.",
+    "copyright": "© {{year}} DigiStore Multi-Vendor E-Commerce. 모든 권리 보유.",
+    "engineeredWith": "제작:",
+    "forCreatorsAndDevs": "디지털 크리에이터와 개발자를 위하여"
   }
 }

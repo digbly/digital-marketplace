@@ -1,6 +1,7 @@
 {
   "common": {
-    "appName": "Digital Marketplace",
+    "appName": "DigiStore PRO",
+    "marketplace": "交易平台",
     "search": "搜索",
     "searchPlaceholder": "搜索 UI 套件、3D 资产、源码...",
     "cancel": "取消",
@@ -9,6 +10,7 @@
     "delete": "删除",
     "edit": "编辑",
     "view": "查看",
+    "viewAll": "查看全部",
     "loading": "加载中...",
     "error": "发生错误",
     "success": "成功",
@@ -18,7 +20,14 @@
     "actions": "操作",
     "price": "价格",
     "free": "免费",
-    "currency": "¥"
+    "currency": "¥",
+    "sale": "特惠",
+    "version": "版本",
+    "updated": "更新于",
+    "created": "创建于",
+    "verifiedVendor": "认证商家",
+    "page": "页",
+    "of": "/"
   },
   "nav": {
     "tagline": "数字资产多商户交易平台",
@@ -30,6 +39,7 @@
       "admin": "管理员"
     },
     "categories": "分类",
+    "allCategories": "全部分类",
     "explore": "探索",
     "trending": "热门趋势",
     "myPurchases": "已购资产",
@@ -49,6 +59,8 @@
     "settings": "设置"
   },
   "languages": {
+    "selectLanguage": "选择语言",
+    "changeLanguage": "切换语言",
     "vi": "Tiếng Việt",
     "en": "English",
     "ja": "日本語",
@@ -58,9 +70,14 @@
   "storefront": {
     "heroTitle": "为您的下一个项目发现顶级数字资产",
     "heroSubtitle": "来自全球顶尖创作者的数千个精选源码、UI套件、3D模型、音频和图形素材。",
-    "featuredProducts": "精选产品",
+    "featuredProducts": "精选数字资产",
+    "featuredDescription": "来自顶级创作者的高品质精选正版数字产品。",
     "popularCategories": "热门分类",
-    "recentlyAdded": "最新上架",
+    "recentlyAdded": "最新上架产品",
+    "recentlyAddedDescription": "本周最新发布的数字化成果、脚本、模板和样板代码。",
+    "bestSellers": "畅销榜单",
+    "bestSellersTitle": "社区最爱与高分推荐",
+    "bestSellersDescription": "深受开发者和设计师喜爱的最热门高评分数字资产。",
     "instantDownload": "即时下载",
     "instantDownloadDesc": "结账后立即获得安全下载链接和授权激活密钥。",
     "buyerProtection": "买家保障",
@@ -70,6 +87,7 @@
     "reviews": "评价",
     "sales": "销量",
     "addToCart": "加入购物车",
+    "added": "已加入",
     "buyNow": "立即购买",
     "preview": "在线预览",
     "filter": "筛选",
@@ -78,8 +96,79 @@
     "sortPriceLow": "价格：从低到高",
     "sortPriceHigh": "价格：从高到低",
     "sortPopular": "最受欢迎",
+    "sortRating": "评分最高",
     "allCategories": "全部分类",
-    "noProductsFound": "未找到产品"
+    "viewCatalog": "查看完整目录",
+    "noProductsFound": "未找到匹配的产品",
+    "noProductsDesc": "尝试调整搜索关键词或清除筛选条件。"
+  },
+  "browse": {
+    "title": "浏览数字资产平台",
+    "subtitle": "探索 {{count}} 个经过审核且可立即下载的正版数字资产",
+    "searchAssets": "搜索资产",
+    "keywords": "关键词...",
+    "assetFormat": "资产格式",
+    "allFormats": "所有格式",
+    "downloadableFiles": "可下载文件",
+    "softwareLicenses": "软件授权许可",
+    "bundles": "资产捆绑包",
+    "categories": "分类",
+    "clear": "清除",
+    "minRating": "最低评分",
+    "allRatings": "所有评分",
+    "ratingAndUp": "{{rating}} 星及以上",
+    "resetFilters": "重置所有筛选"
+  },
+  "cart": {
+    "title": "您的购物车",
+    "itemsCount": "{{count}} 件商品",
+    "removeItem": "移除",
+    "subtotal": "小计",
+    "discount": "折扣",
+    "tax": "预估税费",
+    "total": "实付金额",
+    "checkout": "去结账",
+    "continueShopping": "继续购物",
+    "emptyCartTitle": "购物车为空",
+    "emptyCartMessage": "您还没有添加任何商品到购物车。"
+  },
+  "checkout": {
+    "title": "订单结算",
+    "secureCheckout": "256位 SSL 安全加密结算",
+    "orderSummary": "订单摘要",
+    "paymentMethod": "支付方式",
+    "creditCard": "信用卡 / 借记卡",
+    "paypal": "PayPal",
+    "crypto": "加密货币 (USDT, BTC, ETH)",
+    "momo": "扫码快捷支付",
+    "promoCode": "优惠码",
+    "apply": "使用",
+    "payNow": "确认并支付",
+    "processing": "处理中...",
+    "orderSuccess": "订单支付成功！",
+    "orderSuccessDesc": "感谢您的购买。您的数字资产下载链接和授权密钥已生成完毕。",
+    "downloadLink": "下载数字资产",
+    "licenseKey": "您的授权密钥",
+    "copyKey": "复制密钥",
+    "copied": "已复制！",
+    "goToLibrary": "前往我的资源库"
+  },
+  "productDetail": {
+    "instantDelivery": "即时交付",
+    "commercialLicense": "商业使用授权",
+    "lifetimeUpdates": "终身免费更新",
+    "supportIncluded": "创作者提供6个月技术支持",
+    "specifications": "规格说明",
+    "filesIncluded": "包含文件",
+    "compatibleWith": "兼容环境",
+    "fileSize": "文件大小",
+    "customerReviews": "买家评价",
+    "noReviewsYet": "暂无买家评价",
+    "beTheFirstReview": "成为第一个评价该资产的用户！",
+    "relatedProducts": "相关资产推荐",
+    "vendorInfo": "商家信息",
+    "joined": "入驻时间",
+    "totalSales": "总销量"
   },
   "vendor": {
     "hub": "Vendor Hub",
@@ -117,16 +206,14 @@
       "platformSettings": "平台设置"
     }
   },
-  "cart": {
-    "title": "您的购物车",
-    "itemsCount": "{{count}} 件商品",
-    "removeItem": "移除",
-    "subtotal": "小计",
-    "discount": "折扣",
-    "tax": "预估税费",
-    "total": "实付金额",
-    "checkout": "去结账",
-    "continueShopping": "继续购物"
+  "buyer": {
+    "libraryTitle": "我的已购资产库",
+    "librarySubtitle": "无限次畅享您已购买的全部源码、设计资产与授权密钥",
+    "searchPurchases": "搜索已购资产...",
+    "download": "立即下载",
+    "viewKey": "查看密钥",
+    "noPurchasesTitle": "暂无已购资产",
+    "noPurchasesDesc": "探索交易平台，为您的项目选购高品质的数字产品。"
   },
   "auth": {
     "loginTitle": "欢迎回来",
@@ -143,17 +230,38 @@
     "alreadyHaveAccount": "已有账户？",
     "loginButton": "登录",
     "registerButton": "创建账户",
-    "backToStorefront": "返回商铺"
+    "backToStorefront": "返回商铺",
+    "premierPlatform": "顶级数字创作者交易平台",
+    "showcaseTitle": "购买、出售与授权高端数字资产。",
+    "showcaseSubtitle": "探索即时自动交付的源码样板、UI模板、设计系统与软件授权密钥。",
+    "encryptedDownloads": "即时加密下载与安全令牌链接",
+    "licensePools": "自动化授权密钥池与配额分发",
+    "secureEscrow": "买家资金保障与托管结算"
   },
   "footer": {
     "about": "关于我们",
-    "aboutDesc": "专为开发者、设计师和内容创作者打造的领先数字资产交易平台。",
-    "resources": "资源",
+    "aboutDesc": "专为开发者、设计师和内容创作者打造的高端数字资产、SaaS初始套件与软件授权交易平台。",
+    "marketplace": "交易平台",
+    "forCreators": "创作者专区",
+    "becomeVendor": "入驻成为商家",
+    "vendorDashboard": "商家控制面板",
+    "earningsPayouts": "收益与提现",
+    "submitAsset": "发布新资产",
+    "templatesThemes": "模板与主题",
+    "sourceCodeBoilerplates": "源码样板工程",
+    "softwareLicenses": "软件授权密钥",
+    "trustSecurity": "安全与信赖",
+    "verifiedFiles": "100% 病毒查杀纯净文件",
+    "instantKeyGen": "即时下载与自动密钥生成",
+    "lifetimeAccess": "100% 终身使用权益保障",
     "legal": "法律与条款",
     "terms": "服务条款",
     "privacy": "隐私政策",
     "license": "授权协议",
     "support": "客户支持",
-    "allRightsReserved": "版权所有。"
+    "allRightsReserved": "版权所有。",
+    "copyright": "© {{year}} DigiStore Multi-Vendor E-Commerce. 版权所有。",
+    "engineeredWith": "设计与开发：",
+    "forCreatorsAndDevs": "致力于服务全球数字创作者与开发者"
   }
 }
